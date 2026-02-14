@@ -3,21 +3,21 @@ from typing import List
 
 from app.core.supabase_client import supabase
 from app.schemas import (
-    JobSeekerCreate,
-    JobSeekerUpdate,
-    JobSeekerResponse,
-    StoreCreate,
-    StoreResponse,
-    JobPostingCreate,
-    JobPostingResponse,
+    CastCreate,
+    CastUpdate,
+    CastResponse,
+    ShopCreate,
+    ShopResponse,
+    InterviewCreate,
+    InterviewResponse,
 )
 
 router = APIRouter()
 
 
 # ===== 求職者エンドポイント =====
-@router.post("/job-seekers", response_model=JobSeekerResponse, status_code=status.HTTP_201_CREATED)
-def create_job_seeker(job_seeker: JobSeekerCreate):
+@router.post("/job-seekers", response_model=CastResponse, status_code=status.HTTP_201_CREATED)
+def create_job_seeker(job_seeker: CastCreate):
     """求職者登録"""
     response = supabase.table("casts").insert(job_seeker.model_dump()).execute()
     if response.data:
@@ -25,14 +25,14 @@ def create_job_seeker(job_seeker: JobSeekerCreate):
     raise HTTPException(status_code=500, detail="登録に失敗しました")
 
 
-@router.get("/job-seekers", response_model=List[JobSeekerResponse])
+@router.get("/job-seekers", response_model=List[CastResponse])
 def get_job_seekers(skip: int = 0, limit: int = 100):
     """求職者一覧取得"""
     response = supabase.table("casts").select("*").range(skip, skip + limit - 1).execute()
     return response.data if response.data else []
 
 
-@router.get("/job-seekers/{job_seeker_id}", response_model=JobSeekerResponse)
+@router.get("/job-seekers/{job_seeker_id}", response_model=CastResponse)
 def get_job_seeker(job_seeker_id: int):
     """求職者詳細取得"""
     response = supabase.table("casts").select("*").eq("id", job_seeker_id).execute()
@@ -41,8 +41,8 @@ def get_job_seeker(job_seeker_id: int):
     raise HTTPException(status_code=404, detail="求職者が見つかりません")
 
 
-@router.patch("/job-seekers/{job_seeker_id}", response_model=JobSeekerResponse)
-def update_job_seeker(job_seeker_id: int, job_seeker_update: JobSeekerUpdate):
+@router.patch("/job-seekers/{job_seeker_id}", response_model=CastResponse)
+def update_job_seeker(job_seeker_id: int, job_seeker_update: CastUpdate):
     """求職者情報更新"""
     update_data = job_seeker_update.model_dump(exclude_unset=True)
     response = supabase.table("casts").update(update_data).eq("id", job_seeker_id).execute()
@@ -61,8 +61,8 @@ def delete_job_seeker(job_seeker_id: int):
 
 
 # ===== 店舗エンドポイント =====
-@router.post("/stores", response_model=StoreResponse, status_code=status.HTTP_201_CREATED)
-def create_store(store: StoreCreate):
+@router.post("/stores", response_model=ShopResponse, status_code=status.HTTP_201_CREATED)
+def create_store(store: ShopCreate):
     """店舗登録"""
     response = supabase.table("shops").insert(store.model_dump()).execute()
     if response.data:
@@ -70,14 +70,14 @@ def create_store(store: StoreCreate):
     raise HTTPException(status_code=500, detail="登録に失敗しました")
 
 
-@router.get("/stores", response_model=List[StoreResponse])
+@router.get("/stores", response_model=List[ShopResponse])
 def get_stores(skip: int = 0, limit: int = 100):
     """店舗一覧取得"""
     response = supabase.table("shops").select("*").range(skip, skip + limit - 1).execute()
     return response.data if response.data else []
 
 
-@router.get("/stores/{store_id}", response_model=StoreResponse)
+@router.get("/stores/{store_id}", response_model=ShopResponse)
 def get_store(store_id: int):
     """店舗詳細取得"""
     response = supabase.table("shops").select("*").eq("id", store_id).execute()
@@ -87,8 +87,8 @@ def get_store(store_id: int):
 
 
 # ===== 求人エンドポイント =====
-@router.post("/job-postings", response_model=JobPostingResponse, status_code=status.HTTP_201_CREATED)
-def create_job_posting(job_posting: JobPostingCreate):
+@router.post("/job-postings", response_model=InterviewResponse, status_code=status.HTTP_201_CREATED)
+def create_job_posting(job_posting: InterviewCreate):
     """求人登録"""
     # 店舗存在確認
     store_check = supabase.table("shops").select("id").eq("id", job_posting.store_id).execute()
@@ -101,14 +101,14 @@ def create_job_posting(job_posting: JobPostingCreate):
     raise HTTPException(status_code=500, detail="登録に失敗しました")
 
 
-@router.get("/job-postings", response_model=List[JobPostingResponse])
+@router.get("/job-postings", response_model=List[InterviewResponse])
 def get_job_postings(skip: int = 0, limit: int = 100):
     """求人一覧取得"""
     response = supabase.table("interviews").select("*, shops(*)").range(skip, skip + limit - 1).execute()
     return response.data if response.data else []
 
 
-@router.get("/job-postings/{job_posting_id}", response_model=JobPostingResponse)
+@router.get("/job-postings/{job_posting_id}", response_model=InterviewResponse)
 def get_job_posting(job_posting_id: int):
     """求人詳細取得"""
     response = supabase.table("interviews").select("*, shops(*)").eq("id", job_posting_id).execute()
