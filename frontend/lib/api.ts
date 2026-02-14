@@ -28,6 +28,7 @@ export interface Cast {
   looks_tags?: string[];
   status: string;
   photos_url?: string;
+  notes?: string;
   created_at: string;
 }
 
