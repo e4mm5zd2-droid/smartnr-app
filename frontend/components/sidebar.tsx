@@ -97,14 +97,14 @@ function getRankStyle(rank: string) {
   }
 }
 
-function SidebarContent() {
+function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname();
 
   return (
     <div className="flex h-full flex-col">
       {/* ロゴ・ヘッダー */}
       <div className="flex h-16 items-center border-b px-6">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2" onClick={onLinkClick}>
           <div className="flex h-10 w-10 items-center justify-center rounded-xl shadow-sm" style={{ backgroundColor: '#00C4CC' }}>
             <span className="text-lg font-bold text-white">SN</span>
           </div>
@@ -126,6 +126,7 @@ function SidebarContent() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onLinkClick}
                 className={cn(
                   'flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                   isActive
@@ -198,6 +199,10 @@ export function Sidebar() {
 export function MobileSidebar() {
   const [open, setOpen] = useState(false);
 
+  const handleLinkClick = () => {
+    setOpen(false);
+  };
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -210,7 +215,7 @@ export function MobileSidebar() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 bg-slate-900 p-0">
-        <SidebarContent />
+        <SidebarContent onLinkClick={handleLinkClick} />
       </SheetContent>
     </Sheet>
   );
