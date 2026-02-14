@@ -162,3 +162,36 @@ class BonusCalculationResponse(BaseModel):
     base_amount: int = Field(..., description="基準額（円）")
     bonus_amount: int = Field(..., description="報酬額（円）")
     note: str = Field(default="", description="備考")
+
+
+# ==================== Interview Schemas ====================
+
+class InterviewBase(BaseModel):
+    """面接基本スキーマ"""
+    shop_id: int = Field(..., description="店舗ID")
+    cast_id: Optional[int] = Field(None, description="キャストID")
+    scheduled_at: datetime = Field(..., description="面接予定日時")
+    status: str = Field(default="scheduled", description="ステータス: scheduled/completed/cancelled")
+    notes: Optional[str] = Field(None, description="備考")
+
+
+class InterviewCreate(InterviewBase):
+    """面接作成スキーマ"""
+    pass
+
+
+class InterviewUpdate(BaseModel):
+    """面接更新スキーマ（全フィールドOptional）"""
+    shop_id: Optional[int] = None
+    cast_id: Optional[int] = None
+    scheduled_at: Optional[datetime] = None
+    status: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class InterviewResponse(InterviewBase):
+    """面接レスポンススキーマ"""
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
