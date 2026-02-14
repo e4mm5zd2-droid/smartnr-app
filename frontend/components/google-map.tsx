@@ -21,7 +21,7 @@ export function GoogleMap({ lat, lng, zoom = 15, markerTitle = '店舗', classNa
 
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     
-    if (!apiKey) {
+    if (!apiKey || apiKey === 'your-google-maps-api-key-here') {
       setError('Google Maps APIキーが設定されていません');
       setLoading(false);
       return;
@@ -30,65 +30,59 @@ export function GoogleMap({ lat, lng, zoom = 15, markerTitle = '店舗', classNa
     const loader = new Loader({
       apiKey,
       version: 'weekly',
-      libraries: ['places', 'geometry'],
     });
 
     loader
-      .load()
-      .then((google) => {
-        const map = new google.maps.Map(mapRef.current!, {
-          center: { lat, lng },
-          zoom,
-          styles: [
-            {
-              featureType: 'all',
-              elementType: 'geometry',
-              stylers: [{ color: '#242f3e' }],
-            },
-            {
-              featureType: 'all',
-              elementType: 'labels.text.stroke',
-              stylers: [{ color: '#242f3e' }],
-            },
-            {
-              featureType: 'all',
-              elementType: 'labels.text.fill',
-              stylers: [{ color: '#746855' }],
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{ color: '#17263c' }],
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{ color: '#38414e' }],
-            },
-            {
-              featureType: 'poi',
-              elementType: 'geometry',
-              stylers: [{ color: '#283d4a' }],
-            },
-          ],
-        });
+      .importLibrary('maps')
+      .then(({ Map }) => {
+        loader.importLibrary('marker').then(({ Marker }) => {
+          const map = new Map(mapRef.current!, {
+            center: { lat, lng },
+            zoom,
+            mapId: 'smartnr-map',
+            styles: [
+              {
+                featureType: 'all',
+                elementType: 'geometry',
+                stylers: [{ color: '#242f3e' }],
+              },
+              {
+                featureType: 'all',
+                elementType: 'labels.text.stroke',
+                stylers: [{ color: '#242f3e' }],
+              },
+              {
+                featureType: 'all',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#746855' }],
+              },
+              {
+                featureType: 'water',
+                elementType: 'geometry',
+                stylers: [{ color: '#17263c' }],
+              },
+              {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{ color: '#38414e' }],
+              },
+              {
+                featureType: 'poi',
+                elementType: 'geometry',
+                stylers: [{ color: '#283d4a' }],
+              },
+            ],
+          });
 
-        // マーカーを追加
-        new google.maps.Marker({
-          position: { lat, lng },
-          map,
-          title: markerTitle,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: '#00C4CC',
-            fillOpacity: 1,
-            strokeColor: '#fff',
-            strokeWeight: 2,
-          },
-        });
+          // マーカーを追加
+          new Marker({
+            position: { lat, lng },
+            map,
+            title: markerTitle,
+          });
 
-        setLoading(false);
+          setLoading(false);
+        });
       })
       .catch((err) => {
         console.error('Google Maps読み込みエラー:', err);
