@@ -136,7 +136,7 @@ JSONフォーマット（マークダウン不可）で回答してください�
         # xAI API呼び出し
         try:
             completion = xai_client.chat.completions.create(
-                model="grok-2-1212",
+                model="grok-3-mini",
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": user_prompt}

@@ -45,7 +45,7 @@ async def analyze_face(file: UploadFile = File(...)):
         
         # xAI Grok Vision APIに送信
         response = xai_client.chat.completions.create(
-            model="grok-2-vision-1212",
+            model="grok-3-mini",
             messages=[
                 {
                     "role": "user",
