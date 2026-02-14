@@ -345,14 +345,14 @@ export default function SchedulePage() {
                     onClick={() => handleDateClick(day)}
                     className={`relative aspect-square rounded-lg p-2 text-sm transition-colors ${
                       isSelected
-                        ? 'ring-2'
+                        ? 'ring-2 ring-[#00C4CC]'
                         : isTodayDate
                         ? 'bg-slate-800'
                         : dayInterviews.length > 0
                         ? 'hover:bg-slate-800 cursor-pointer'
                         : 'hover:bg-slate-800/50'
                     }`}
-                    style={isSelected ? { backgroundColor: 'rgba(0, 196, 204, 0.2)', ringColor: '#00C4CC' } : undefined}
+                    style={isSelected ? { backgroundColor: 'rgba(0, 196, 204, 0.2)' } : undefined}
                   >
                     <span className={`block ${isTodayDate ? 'font-bold' : ''}`} style={isTodayDate ? { color: '#00C4CC' } : undefined}>
                       {format(day, 'd')}
