@@ -181,9 +181,11 @@ export default function ConciergePage() {
     }, 200);
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com').replace(/\/+$/, '');
+      const url = `${API_BASE_URL}/api/ai-matching`;
+      console.log('AI Matching URL:', url);
       
-      const response = await fetch(`${API_BASE_URL}/api/ai-matching`, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +204,9 @@ export default function ConciergePage() {
       setProgress(100);
 
       if (!response.ok) {
-        throw new Error('AIマッチングに失敗しました');
+        const errorText = await response.text();
+        console.error('AI Matching Response Error:', response.status, errorText);
+        throw new Error(`AIマッチングに失敗しました (${response.status})`);
       }
 
       const data: MatchingResult = await response.json();
@@ -211,7 +215,7 @@ export default function ConciergePage() {
     } catch (error) {
       console.error('AI Matching Error:', error);
       clearInterval(progressInterval);
-      alert('AIマッチングに失敗しました。もう一度お試しください。');
+      alert(`AIマッチングに失敗しました。もう一度お試しください。\n\nエラー詳細: ${error instanceof Error ? error.message : '不明'}`);
     } finally {
       setIsMatching(false);
       setTimeout(() => setProgress(0), 500);
