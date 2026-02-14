@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オフライン - SmartNR</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 500px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: #00C4CC;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0, 196, 204, 0.3);
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    
+    .title {
+      color: white;
+    }
+    
+    .highlight {
+      color: #00C4CC;
+      text-shadow: 
+        0 0 5px #00C4CC,
+        0 0 10px #00C4CC;
+    }
+    
+    p {
+      color: #94A3B8;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    
+    .button {
+      background: #00C4CC;
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .button:hover {
+      background: #00A3AA;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 196, 204, 0.4);
+    }
+    
+    .wifi-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">SN</div>
+    
+    <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M5 13a10 10 0 0 1 14 0" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8.5 16.5a5 5 0 0 1 7 0" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="12" cy="20" r="1" fill="currentColor"/>
+      <line x1="1" y1="1" x2="23" y2="23" stroke="#FF4444" stroke-width="2"/>
+    </svg>
+    
+    <h1>
+      <span class="title">Smart</span><span class="highlight">NR</span>
+    </h1>
+    
+    <p>
+      インターネット接続がありません。<br>
+      ネットワークに接続してから、もう一度お試しください。
+    </p>
+    
+    <button class="button" onclick="window.location.reload()">
+      再読み込み
+    </button>
+  </div>
+</body>
+</html>

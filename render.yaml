@@ -1,0 +1,46 @@
+services:
+  # FastAPI バックエンド
+  - type: web
+    name: smartnr-backend
+    runtime: python
+    region: singapore
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: XAI_API_KEY
+        sync: false
+      - key: XAI_BASE_URL
+        value: https://api.x.ai/v1
+      - key: APP_NAME
+        value: SmartNR API
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: https://smartnr-frontend.onrender.com,https://smartnr.vercel.app
+
+  # Next.js フロントエンド
+  - type: web
+    name: smartnr-frontend
+    runtime: node
+    region: singapore
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: NEXT_PUBLIC_API_URL
+        value: https://smartnr-backend.onrender.com
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
