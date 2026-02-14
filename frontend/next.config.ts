@@ -10,4 +10,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-# Force rebuild: 1771062372
+// Force rebuild: 1771062372
