@@ -25,6 +25,7 @@ import {
   Star,
 } from 'lucide-react';
 import Link from 'next/link';
+import { calculateCommission, formatCurrency } from '@/lib/commission';
 
 interface Message {
   id: string;
@@ -637,6 +638,39 @@ export default function ConciergePage() {
                               )}
                             </div>
                           )}
+
+                          {/* 推定報酬 */}
+                          {(() => {
+                            const commission = calculateCommission({
+                              castEstimatedSales: 500000,
+                              sbType: 'sales_percentage',
+                              sbRate: shop.sb_rate,
+                              scoutShare: 70,
+                              paymentCycle: 'monthly',
+                            });
+                            return (
+                              <div className="border-t border-slate-800 pt-3">
+                                <p className="text-xs font-medium text-slate-400 mb-2">💰 推定報酬</p>
+                                <div className="bg-gradient-to-r from-[#00C4CC]/10 to-[#33D4DB]/5 border border-[#00C4CC]/20 rounded-lg p-3">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-xs text-slate-400">SB率 {shop.sb_rate}% / 売上50万 / 取分70%</span>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-lg font-bold" style={{ color: '#00C4CC' }}>
+                                      {formatCurrency(commission.scoutIncome)}<span className="text-xs text-slate-400 font-normal">/月</span>
+                                    </span>
+                                    <Link
+                                      href={`/commission?shop_id=${shop.shop_id}`}
+                                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors"
+                                      style={{ background: 'rgba(0, 196, 204, 0.15)', color: '#00C4CC' }}
+                                    >
+                                      📊 詳しく計算
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       </Card>
                     ))}
