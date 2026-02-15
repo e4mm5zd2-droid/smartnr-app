@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LayoutWrapper } from "@/components/layout-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Watermark } from "@/components/Watermark";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LayoutWrapper>{children}</LayoutWrapper>
+          <Watermark />
         </ThemeProvider>
       </body>
     </html>
