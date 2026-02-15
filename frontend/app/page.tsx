@@ -31,24 +31,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      {/* ウェルカムヘッダー */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 p-8" style={{ background: 'linear-gradient(135deg, rgba(0, 196, 204, 0.1) 0%, rgba(0, 196, 204, 0.05) 50%, rgba(0, 196, 204, 0.1) 100%)' }}>
-        <div className="relative z-10">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm" style={{ backgroundColor: 'rgba(0, 196, 204, 0.2)', color: '#00C4CC' }}>
-            <Sparkles className="h-4 w-4" />
-            AI搭載スカウト管理システム
-          </div>
-          <h1 className="text-4xl font-bold">
-            Welcome Back, <span style={{ color: '#00C4CC' }}>京極 蓮</span>
-          </h1>
-          <p className="mt-2 text-slate-400">
-            今日も効率的なスカウト活動をサポートします
-          </p>
-        </div>
-        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(0, 196, 204, 0.2)' }} />
-        <div className="absolute -bottom-16 -left-16 h-64 w-64 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(0, 196, 204, 0.15)' }} />
-      </div>
-
       {/* 統計カード */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="border-slate-800 bg-slate-900/50 p-6">
