@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { SalaryCalculatorWidget } from '@/components/salary-calculator-widget';
+import { CommissionSimulator } from '@/components/commission-simulator';
 
 const steps = [
   { id: 1, name: 'キャスト選択', description: '申請対象を選択' },
@@ -82,9 +83,22 @@ export default function SalaryRequestPage() {
         <div className="inline-flex items-center justify-center mb-4 h-12 w-12 rounded-full" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
           <DollarSign className="h-6 w-6 text-white" />
         </div>
-        <h1 className="text-3xl font-bold">給料申請</h1>
+        <h1 className="text-3xl font-bold">給料申請 & 報酬シミュレーション</h1>
         <p className="mt-2 text-sm text-slate-400">
-          スカウト報酬の申請フォーム
+          スカウト報酬の申請と収入シミュレーション
+        </p>
+      </div>
+
+      {/* 報酬シミュレーター */}
+      <CommissionSimulator />
+
+      <Separator className="bg-slate-800" />
+
+      {/* 給料申請フォーム */}
+      <div className="text-center pt-6">
+        <h2 className="text-2xl font-bold mb-2">給料申請フォーム</h2>
+        <p className="text-sm text-slate-400">
+          実際の給料申請はこちらから
         </p>
       </div>
 
