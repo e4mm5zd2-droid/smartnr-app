@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExportMenu } from '@/components/export-menu';
+import { CastCategoryBadge, type CastCategory } from '@/components/cast-category-badge';
 
 const statusConfig = {
   active: { label: '活動中', color: 'bg-green-500/10 text-green-400 border-green-500/20' },
@@ -34,11 +35,14 @@ const statusConfig = {
   working: { label: '勤務中', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
 };
 
+type CastCategoryFilter = 'all' | CastCategory;
+
 export default function CastsPage() {
   const [casts, setCasts] = useState<Cast[]>([]);
   const [filteredCasts, setFilteredCasts] = useState<Cast[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<CastCategoryFilter>('all');
 
   useEffect(() => {
     const fetchCasts = async () => {
@@ -57,12 +61,18 @@ export default function CastsPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = casts.filter((cast) =>
+    let filtered = casts.filter((cast) =>
       cast.genji_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       cast.phone.includes(searchQuery)
     );
+    
+    // カテゴリフィルター適用
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter((cast) => cast.cast_category === categoryFilter);
+    }
+    
     setFilteredCasts(filtered);
-  }, [searchQuery, casts]);
+  }, [searchQuery, categoryFilter, casts]);
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -115,21 +125,64 @@ export default function CastsPage() {
 
       {/* 検索・フィルター */}
       <Card className="border-slate-800 bg-slate-900/50 p-4">
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <Input
-              placeholder="源氏名・電話番号で検索..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-slate-800 pl-10"
-            />
+        <div className="space-y-3">
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input
+                placeholder="源氏名・電話番号で検索..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-slate-800 pl-10"
+              />
+            </div>
+            <ExportMenu data={filteredCasts} type="casts" />
           </div>
-          <Button variant="outline" className="border-slate-700">
-            <Filter className="mr-2 h-4 w-4" />
-            フィルター
-          </Button>
-          <ExportMenu data={filteredCasts} type="casts" />
+          
+          {/* カテゴリフィルター */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-medium text-slate-400">カテゴリ:</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCategoryFilter('all')}
+              className={`${categoryFilter === 'all' ? 'bg-[#00C4CC]/20 text-[#00C4CC] border-[#00C4CC]' : 'border-slate-700'}`}
+            >
+              全て
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCategoryFilter('new')}
+              className={`${categoryFilter === 'new' ? 'bg-red-500/20 text-red-400 border-red-500' : 'border-slate-700'}`}
+            >
+              🆕 新人
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCategoryFilter('experience')}
+              className={`${categoryFilter === 'experience' ? 'bg-[#00C4CC]/20 text-[#00C4CC] border-[#00C4CC]' : 'border-slate-700'}`}
+            >
+              👩 経験あり
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCategoryFilter('active')}
+              className={`${categoryFilter === 'active' ? 'bg-green-500/20 text-green-400 border-green-500' : 'border-slate-700'}`}
+            >
+              🟢 稼働中
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCategoryFilter('returner')}
+              className={`${categoryFilter === 'returner' ? 'bg-orange-500/20 text-orange-400 border-orange-500' : 'border-slate-700'}`}
+            >
+              🔄 復帰
+            </Button>
+          </div>
         </div>
       </Card>
 
@@ -139,6 +192,7 @@ export default function CastsPage() {
           <TableHeader>
             <TableRow className="border-slate-800 hover:bg-slate-800/50">
               <TableHead>源氏名</TableHead>
+              <TableHead>カテゴリ</TableHead>
               <TableHead>年齢</TableHead>
               <TableHead>電話番号</TableHead>
               <TableHead>タグ</TableHead>
@@ -168,7 +222,14 @@ export default function CastsPage() {
                   key={cast.id}
                   className="border-slate-800 hover:bg-slate-800/50"
                 >
-                  <TableCell className="font-medium">{cast.genji_name}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <span>{cast.genji_name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <CastCategoryBadge category={(cast.cast_category || 'new') as CastCategory} />
+                  </TableCell>
                   <TableCell>{cast.age}歳</TableCell>
                   <TableCell>
                     <a

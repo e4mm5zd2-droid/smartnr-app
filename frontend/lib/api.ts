@@ -29,6 +29,13 @@ export interface Cast {
   status: string;
   photos_url?: string;
   notes?: string;
+  experience?: string;
+  personality?: string;
+  preferred_area?: string;
+  priority?: string;
+  is_new?: boolean;
+  cast_category?: 'new' | 'experience' | 'active' | 'returner';
+  current_shop?: string;
   created_at: string;
 }
 

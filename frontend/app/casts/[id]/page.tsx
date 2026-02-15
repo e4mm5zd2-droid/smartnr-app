@@ -21,6 +21,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { Cast } from '@/lib/api';
+import { CastCategoryBadge, type CastCategory } from '@/components/cast-category-badge';
 
 export default function CastDetailPage() {
   const params = useParams();
@@ -84,7 +85,10 @@ export default function CastDetailPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">{cast.genji_name}</h1>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              {cast.genji_name}
+              <CastCategoryBadge category={(cast.cast_category || 'new') as CastCategory} />
+            </h1>
             <p className="mt-1 text-sm text-slate-400">キャスト詳細情報</p>
           </div>
         </div>

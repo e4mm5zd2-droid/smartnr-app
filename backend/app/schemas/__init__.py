@@ -84,6 +84,11 @@ class CastBase(BaseModel):
     personality: str = Field(default="", description="性格・特徴")
     preferred_area: str = Field(default="", description="希望エリア")
     priority: str = Field(default="働きやすさ", description="優先条件: 高時給/働きやすさ/知名度/成長環境")
+    
+    # v3拡張: カテゴリ分類
+    is_new: bool = Field(default=True, description="新人フラグ")
+    cast_category: str = Field(default="new", description="カテゴリ: new/experience/active/returner")
+    current_shop: Optional[str] = Field(None, description="現在の所属店舗名")
 
 
 class CastCreate(CastBase):
@@ -106,6 +111,9 @@ class CastUpdate(BaseModel):
     personality: Optional[str] = None
     preferred_area: Optional[str] = None
     priority: Optional[str] = None
+    is_new: Optional[bool] = None
+    cast_category: Optional[str] = None
+    current_shop: Optional[str] = None
 
 
 class CastResponse(CastBase):

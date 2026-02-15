@@ -31,6 +31,8 @@ export default function NewCastPage() {
   const [phone, setPhone] = useState("");
   const [lineId, setLineId] = useState("");
   const [desiredArea, setDesiredArea] = useState("");
+  const [experience, setExperience] = useState("未経験");
+  const [currentShop, setCurrentShop] = useState("");
   const [notes, setNotes] = useState("");
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,6 +78,21 @@ export default function NewCastPage() {
     setError(null);
 
     try {
+      // カテゴリ自動判定
+      let castCategory: 'new' | 'experience' | 'active' | 'returner' = 'new';
+      let isNew = true;
+      
+      if (experience === '未経験') {
+        castCategory = 'new';
+        isNew = true;
+      } else if (currentShop) {
+        castCategory = 'active';
+        isNew = false;
+      } else if (experience !== '未経験') {
+        castCategory = 'experience';
+        isNew = false;
+      }
+
       await createCast({
         genji_name: genjiName,
         real_name_initial: realNameInitial,
@@ -84,6 +101,11 @@ export default function NewCastPage() {
         line_id: lineId,
         looks_tags: analysisResult?.tags || [],
         status: "募集中",
+        experience,
+        preferred_area: desiredArea,
+        is_new: isNew,
+        cast_category: castCategory,
+        current_shop: currentShop || undefined,
         notes: `希望エリア: ${desiredArea}\n${notes}`,
       });
       
@@ -375,6 +397,33 @@ export default function NewCastPage() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm text-slate-400">経験 *</label>
+                  <Select value={experience} onValueChange={setExperience}>
+                    <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                      <SelectValue placeholder="経験を選択" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="未経験">未経験</SelectItem>
+                      <SelectItem value="半年未満">半年未満</SelectItem>
+                      <SelectItem value="1年以上">1年以上</SelectItem>
+                      <SelectItem value="3年以上">3年以上</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {experience !== '未経験' && (
+                  <div className="space-y-2">
+                    <label className="text-sm text-slate-400">現在の所属店舗（稼働中の場合）</label>
+                    <Input
+                      value={currentShop}
+                      onChange={(e) => setCurrentShop(e.target.value)}
+                      placeholder="例: Lounge MIYABI"
+                      className="bg-slate-800 border-slate-700 text-white"
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <label className="text-sm text-slate-400">備考</label>

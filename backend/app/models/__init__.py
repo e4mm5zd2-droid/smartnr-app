@@ -57,6 +57,11 @@ class Cast(Base):
     preferred_area = Column(Text, default='')  # 希望エリア
     priority = Column(Text, default='働きやすさ')  # '高時給' | '働きやすさ' | '知名度' | '成長環境'
     
+    # v3拡張: カテゴリ分類
+    is_new = Column(Boolean, default=True)  # True=新人、False=既存
+    cast_category = Column(Text, default='new')  # 'new', 'experience', 'active', 'returner'
+    current_shop = Column(Text, nullable=True)  # 現在の所属店舗名（activeの場合）
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 

@@ -31,14 +31,20 @@ import {
   Bell,
   Edit,
   Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { format, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import { CastCategoryBadge, getCategoryBorderColor, getCategoryBackgroundColor, type CastCategory } from '@/components/cast-category-badge';
 
 interface Interview {
   id: string;
+  castId: number;
   castName: string;
+  castAge: number;
+  castCategory: CastCategory;
+  currentShop?: string;
   date: Date;
   time: string;
   location: string;
@@ -49,45 +55,65 @@ interface Interview {
 const mockInterviews: Interview[] = [
   {
     id: '1',
-    castName: 'あやか',
+    castId: 1,
+    castName: 'まり',
+    castAge: 21,
+    castCategory: 'new',
     date: new Date(2026, 1, 15, 15, 0),
     time: '15:00',
     location: 'Club LION（祇園）',
     status: 'scheduled',
-    note: '経験者、祇園エリア希望',
+    note: '業界未経験。緊張しやすいので丁寧に対応',
   },
   {
     id: '2',
-    castName: 'みゆき',
+    castId: 2,
+    castName: 'あいり',
+    castAge: 23,
+    castCategory: 'active',
+    currentShop: 'Lounge MIYABI',
     date: new Date(2026, 1, 17, 14, 0),
     time: '14:00',
     location: 'PLATINUM（木屋町）',
     status: 'confirmed',
+    note: '移籍希望。時給アップを重視',
   },
   {
     id: '3',
-    castName: 'さくら',
+    castId: 3,
+    castName: 'ゆい',
+    castAge: 22,
+    castCategory: 'experience',
     date: new Date(2026, 1, 20, 16, 30),
     time: '16:30',
     location: 'GALAXY（先斗町）',
     status: 'scheduled',
-    note: '初めて、丁寧に説明',
+    note: '他店で1年経験。祇園エリア希望',
+  },
+  {
+    id: '4',
+    castId: 4,
+    castName: 'さくら',
+    castAge: 24,
+    castCategory: 'returner',
+    date: new Date(2026, 1, 18, 15, 30),
+    time: '15:30',
+    location: 'Club LION（祇園）',
+    status: 'scheduled',
+    note: '1年前に一度引退。復帰希望',
   },
 ];
+
+type CastCategoryFilter = 'all' | CastCategory;
 
 export default function SchedulePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [interviews, setInterviews] = useState<Interview[]>(mockInterviews);
+  const [categoryFilter, setCategoryFilter] = useState<CastCategoryFilter>('all');
   const [showDialog, setShowDialog] = useState(false);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
-  const [newInterview, setNewInterview] = useState({
-    castName: '',
-    time: '',
-    location: '',
-    note: '',
-  });
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -97,23 +123,17 @@ export default function SchedulePage() {
     return interviews.filter((interview) => isSameDay(interview.date, date));
   };
 
-  const handleAddInterview = () => {
-    if (!selectedDate || !newInterview.castName || !newInterview.time) return;
+  const filteredInterviews = interviews.filter((interview) => {
+    if (categoryFilter === 'all') return true;
+    return interview.castCategory === categoryFilter;
+  });
 
-    const interview: Interview = {
-      id: Date.now().toString(),
-      castName: newInterview.castName,
-      date: selectedDate,
-      time: newInterview.time,
-      location: newInterview.location,
-      status: 'scheduled',
-      note: newInterview.note,
-    };
-
-    setInterviews([...interviews, interview]);
-    setNewInterview({ castName: '', time: '', location: '', note: '' });
-    setShowDialog(false);
-  };
+  // 新人を優先的に上に表示
+  const sortedInterviews = [...filteredInterviews].sort((a, b) => {
+    if (a.castCategory === 'new' && b.castCategory !== 'new') return -1;
+    if (a.castCategory !== 'new' && b.castCategory === 'new') return 1;
+    return a.date.getTime() - b.date.getTime();
+  });
 
   const handleViewInterview = (interview: Interview) => {
     setSelectedInterview(interview);
@@ -122,7 +142,6 @@ export default function SchedulePage() {
 
   const handleStatusChange = (newStatus: Interview['status']) => {
     if (!selectedInterview) return;
-
     setInterviews(
       interviews.map((interview) =>
         interview.id === selectedInterview.id
@@ -135,7 +154,6 @@ export default function SchedulePage() {
 
   const handleDeleteInterview = () => {
     if (!selectedInterview) return;
-
     if (confirm('この面接予定を削除してもよろしいですか？')) {
       setInterviews(interviews.filter((interview) => interview.id !== selectedInterview.id));
       setShowDetailDialog(false);
@@ -146,8 +164,6 @@ export default function SchedulePage() {
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
     const dayInterviews = getInterviewsForDate(day);
-    
-    // その日の面接があれば、最初の面接を表示
     if (dayInterviews.length > 0) {
       handleViewInterview(dayInterviews[0]);
     }
@@ -155,12 +171,11 @@ export default function SchedulePage() {
 
   const getStatusBadge = (status: Interview['status']) => {
     const styles: Record<Interview['status'], { label: string; className: string }> = {
-      scheduled: { label: '予定', className: 'bg-blue-500/20 text-blue-400 border-blue-500/50' },
-      confirmed: { label: '確定', className: 'bg-green-500/20 text-green-400 border-green-500/50' },
-      completed: { label: '完了', className: 'bg-slate-500/20 text-slate-400 border-slate-500/50' },
-      cancelled: { label: 'キャンセル', className: 'bg-red-500/20 text-red-400 border-red-500/50' },
+      scheduled: { label: '🟡 面接待ち', className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50' },
+      confirmed: { label: '✅ 確定', className: 'bg-green-500/20 text-green-400 border-green-500/50' },
+      completed: { label: '✓ 完了', className: 'bg-slate-500/20 text-slate-400 border-slate-500/50' },
+      cancelled: { label: '✗ キャンセル', className: 'bg-red-500/20 text-red-400 border-red-500/50' },
     };
-
     const style = styles[status];
     return (
       <Badge variant="outline" className={`text-xs ${style.className}`}>
@@ -169,12 +184,11 @@ export default function SchedulePage() {
     );
   };
 
-  const todayInterviews = interviews.filter((interview) => isToday(interview.date));
-  const upcomingInterviews = interviews
+  const todayInterviews = sortedInterviews.filter((interview) => isToday(interview.date));
+  const upcomingInterviews = sortedInterviews
     .filter((interview) => interview.date > new Date() && !isToday(interview.date))
-    .sort((a, b) => a.date.getTime() - b.date.getTime())
     .slice(0, 5);
-  
+
   const selectedDateInterviews = selectedDate ? getInterviewsForDate(selectedDate) : [];
 
   return (
@@ -204,97 +218,62 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogTrigger asChild>
-            <Button
-              className="text-white"
-              style={{ backgroundColor: '#00C4CC' }}
-              onClick={() => setSelectedDate(new Date())}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              面接を追加
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="border-slate-800 bg-slate-900">
-            <DialogHeader>
-              <DialogTitle>面接予定を追加</DialogTitle>
-              <DialogDescription>
-                新しい面接予定を登録します
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">キャスト名</label>
-                <Input
-                  placeholder="例: あやか"
-                  value={newInterview.castName}
-                  onChange={(e) => setNewInterview({ ...newInterview, castName: e.target.value })}
-                  className="bg-slate-800"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">日付</label>
-                  <Input
-                    type="date"
-                    value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
-                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                    className="bg-slate-800"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">時刻</label>
-                  <Input
-                    type="time"
-                    value={newInterview.time}
-                    onChange={(e) => setNewInterview({ ...newInterview, time: e.target.value })}
-                    className="bg-slate-800"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">場所</label>
-                <Select
-                  value={newInterview.location}
-                  onValueChange={(value) => setNewInterview({ ...newInterview, location: value })}
-                >
-                  <SelectTrigger className="bg-slate-800">
-                    <SelectValue placeholder="店舗を選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Club LION（祇園）">Club LION（祇園）</SelectItem>
-                    <SelectItem value="PLATINUM（木屋町）">PLATINUM（木屋町）</SelectItem>
-                    <SelectItem value="GALAXY（先斗町）">GALAXY（先斗町）</SelectItem>
-                    <SelectItem value="その他">その他</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">メモ（任意）</label>
-                <textarea
-                  rows={3}
-                  placeholder="特記事項があれば記入"
-                  value={newInterview.note}
-                  onChange={(e) => setNewInterview({ ...newInterview, note: e.target.value })}
-                  className="w-full rounded-md bg-slate-800 px-3 py-2 text-sm border border-slate-700 focus:outline-none focus-visible:border-[#00C4CC]"
-                />
-              </div>
-
-              <Button
-                onClick={handleAddInterview}
-                className="w-full text-white"
-                style={{ backgroundColor: '#00C4CC' }}
-              >
-                追加
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Button
+          className="text-white"
+          style={{ backgroundColor: '#00C4CC' }}
+          onClick={() => setShowDialog(true)}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          面接を追加
+        </Button>
       </div>
+
+      {/* カテゴリフィルター */}
+      <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm font-medium text-slate-400">フィルター:</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCategoryFilter('all')}
+            className={`${categoryFilter === 'all' ? 'bg-[#00C4CC]/20 text-[#00C4CC] border-[#00C4CC]' : 'border-slate-700'}`}
+          >
+            全て
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCategoryFilter('new')}
+            className={`${categoryFilter === 'new' ? 'bg-red-500/20 text-red-400 border-red-500' : 'border-slate-700'}`}
+          >
+            🆕 新人
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCategoryFilter('experience')}
+            className={`${categoryFilter === 'experience' ? 'bg-[#00C4CC]/20 text-[#00C4CC] border-[#00C4CC]' : 'border-slate-700'}`}
+          >
+            👩 経験あり
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCategoryFilter('active')}
+            className={`${categoryFilter === 'active' ? 'bg-green-500/20 text-green-400 border-green-500' : 'border-slate-700'}`}
+          >
+            🟢 稼働中
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCategoryFilter('returner')}
+            className={`${categoryFilter === 'returner' ? 'bg-orange-500/20 text-orange-400 border-orange-500' : 'border-slate-700'}`}
+          >
+            🔄 復帰
+          </Button>
+        </div>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* カレンダー */}
@@ -377,41 +356,6 @@ export default function SchedulePage() {
 
         {/* 面接リスト */}
         <div className="space-y-4">
-          {/* 選択された日の面接 */}
-          {selectedDate && selectedDateInterviews.length > 0 && !isToday(selectedDate) && (
-            <Card className="border-slate-800 bg-slate-900/50 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <CalendarIcon className="h-4 w-4" style={{ color: '#00C4CC' }} />
-                <h4 className="font-semibold">{format(selectedDate, 'M月d日(E)', { locale: ja })}</h4>
-              </div>
-              <div className="space-y-2">
-                {selectedDateInterviews.map((interview) => (
-                  <button
-                    key={interview.id}
-                    onClick={() => handleViewInterview(interview)}
-                    className="w-full rounded-lg border border-slate-800 bg-slate-800/50 p-3 space-y-2 text-left transition-colors hover:bg-slate-800 hover:border-[#00C4CC]/50"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-slate-400" />
-                        <span className="font-medium">{interview.castName}</span>
-                      </div>
-                      {getStatusBadge(interview.status)}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <Clock className="h-3 w-3" />
-                      <span>{interview.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <MapPin className="h-3 w-3" />
-                      <span>{interview.location}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </Card>
-          )}
-
           {/* 本日の面接 */}
           {todayInterviews.length > 0 && (
             <Card className="border-slate-800 bg-slate-900/50 p-4">
@@ -421,27 +365,7 @@ export default function SchedulePage() {
               </div>
               <div className="space-y-2">
                 {todayInterviews.map((interview) => (
-                  <button
-                    key={interview.id}
-                    onClick={() => handleViewInterview(interview)}
-                    className="w-full rounded-lg border border-slate-800 bg-slate-800/50 p-3 space-y-2 text-left transition-colors hover:bg-slate-800 hover:border-[#00C4CC]/50"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-slate-400" />
-                        <span className="font-medium">{interview.castName}</span>
-                      </div>
-                      {getStatusBadge(interview.status)}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <Clock className="h-3 w-3" />
-                      <span>{interview.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <MapPin className="h-3 w-3" />
-                      <span>{interview.location}</span>
-                    </div>
-                  </button>
+                  <InterviewCard key={interview.id} interview={interview} onClick={() => handleViewInterview(interview)} />
                 ))}
               </div>
             </Card>
@@ -457,26 +381,7 @@ export default function SchedulePage() {
                 </p>
               ) : (
                 upcomingInterviews.map((interview) => (
-                  <button
-                    key={interview.id}
-                    onClick={() => handleViewInterview(interview)}
-                    className="w-full rounded-lg border border-slate-800 bg-slate-800/50 p-3 space-y-2 text-left transition-colors hover:bg-slate-800 hover:border-[#00C4CC]/50"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-slate-400" />
-                        <span className="font-medium">{interview.castName}</span>
-                      </div>
-                      {getStatusBadge(interview.status)}
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {format(interview.date, 'M月d日(E) HH:mm', { locale: ja })}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <MapPin className="h-3 w-3" />
-                      <span>{interview.location}</span>
-                    </div>
-                  </button>
+                  <InterviewCard key={interview.id} interview={interview} onClick={() => handleViewInterview(interview)} />
                 ))
               )}
             </div>
@@ -492,9 +397,6 @@ export default function SchedulePage() {
               <User className="h-5 w-5" style={{ color: '#00C4CC' }} />
               面接詳細
             </DialogTitle>
-            <DialogDescription>
-              面接予定の詳細情報
-            </DialogDescription>
           </DialogHeader>
 
           {selectedInterview && (
@@ -510,12 +412,34 @@ export default function SchedulePage() {
                       <User className="h-6 w-6" style={{ color: '#00C4CC' }} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold">{selectedInterview.castName}</h3>
-                      <p className="text-xs text-slate-400">候補キャスト</p>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{selectedInterview.castName}</h3>
+                        <span className="text-sm text-slate-400">({selectedInterview.castAge}歳)</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <CastCategoryBadge category={selectedInterview.castCategory} />
+                        {getStatusBadge(selectedInterview.status)}
+                      </div>
                     </div>
                   </div>
-                  {getStatusBadge(selectedInterview.status)}
                 </div>
+
+                {selectedInterview.castCategory === 'new' && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-red-300">
+                      業界未経験の新人です。丁寧な説明と安心できる対応を心がけてください。
+                    </p>
+                  </div>
+                )}
+
+                {selectedInterview.castCategory === 'active' && selectedInterview.currentShop && (
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                    <p className="text-xs text-green-300">
+                      <span className="font-medium">現在の所属:</span> {selectedInterview.currentShop}
+                    </p>
+                  </div>
+                )}
 
                 <Separator className="bg-slate-800" />
 
@@ -568,7 +492,7 @@ export default function SchedulePage() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleStatusChange('scheduled')}
-                      className={`border-blue-500/50 ${selectedInterview.status === 'scheduled' ? 'bg-blue-500/20 text-blue-400' : ''}`}
+                      className={`border-yellow-500/50 ${selectedInterview.status === 'scheduled' ? 'bg-yellow-500/20 text-yellow-400' : ''}`}
                     >
                       予定
                     </Button>
@@ -625,5 +549,65 @@ export default function SchedulePage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+// 面接カードコンポーネント
+function InterviewCard({ interview, onClick }: { interview: Interview; onClick: () => void }) {
+  const borderColor = getCategoryBorderColor(interview.castCategory);
+  const backgroundColor = getCategoryBackgroundColor(interview.castCategory);
+
+  return (
+    <button
+      onClick={onClick}
+      className="w-full rounded-lg border border-slate-800 p-3 space-y-2 text-left transition-all hover:border-[#00C4CC]/50"
+      style={{
+        borderLeftWidth: '4px',
+        borderLeftColor: borderColor,
+        backgroundColor,
+      }}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <CastCategoryBadge category={interview.castCategory} className="flex-shrink-0" />
+          </div>
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4 text-slate-400 flex-shrink-0" />
+            <span className="font-medium">{interview.castName}</span>
+            <span className="text-xs text-slate-400">({interview.castAge}歳)</span>
+          </div>
+        </div>
+      </div>
+
+      {interview.castCategory === 'new' && (
+        <div className="flex items-center gap-1 text-xs text-red-400">
+          <AlertTriangle className="h-3 w-3" />
+          <span>業界未経験</span>
+        </div>
+      )}
+
+      {interview.castCategory === 'active' && interview.currentShop && (
+        <div className="text-xs text-green-400">
+          現在: {interview.currentShop}
+        </div>
+      )}
+
+      <div className="flex items-center gap-2 text-xs text-slate-400">
+        <Clock className="h-3 w-3" />
+        <span>{format(interview.date, 'M/d(E)', { locale: ja })} {interview.time}</span>
+      </div>
+
+      <div className="flex items-center gap-2 text-xs text-slate-400">
+        <MapPin className="h-3 w-3" />
+        <span>{interview.location}</span>
+      </div>
+
+      {interview.note && interview.castCategory === 'new' && (
+        <div className="text-xs text-slate-300 bg-slate-800/50 rounded p-2">
+          💡 {interview.note}
+        </div>
+      )}
+    </button>
   );
 }
