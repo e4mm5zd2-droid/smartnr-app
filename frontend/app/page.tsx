@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Users, Store, TrendingUp, Sparkles, ArrowRight, Calendar, Calculator } from 'lucide-react';
+import { UserPlus, Users, Store, TrendingUp, DollarSign, Sparkles, ArrowRight, Calendar, Calculator } from 'lucide-react';
 import { getCasts, getStores } from '@/lib/api';
 
 export default function Home() {
