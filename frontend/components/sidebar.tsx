@@ -14,7 +14,8 @@ import {
   LogOut,
   Menu,
   X,
-  Calendar
+  Calendar,
+  Calculator
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -57,6 +58,11 @@ const navItems: NavItem[] = [
     title: '面接スケジュール',
     href: '/schedule',
     icon: Calendar,
+  },
+  {
+    title: '💰 報酬計算',
+    href: '/commission',
+    icon: Calculator,
   },
   {
     title: '給料申請',
