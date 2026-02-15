@@ -65,11 +65,6 @@ const navItems: NavItem[] = [
     icon: Calculator,
   },
   {
-    title: '給料申請',
-    href: '/salary',
-    icon: DollarSign,
-  },
-  {
     title: 'AI Concierge',
     href: '/concierge',
     icon: MessageSquare,

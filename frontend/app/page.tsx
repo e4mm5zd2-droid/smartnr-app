@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Users, Store, TrendingUp, DollarSign, Sparkles, ArrowRight, Calendar } from 'lucide-react';
+import { UserPlus, Users, Store, TrendingUp, Sparkles, ArrowRight, Calendar, Calculator } from 'lucide-react';
 import { getCasts, getStores } from '@/lib/api';
 
 export default function Home() {
@@ -153,11 +153,11 @@ export default function Home() {
           </Card>
         </Link>
 
-        <Link href="/salary">
+        <Link href="/commission">
           <Card className="group border-slate-800 bg-slate-900/50 p-6 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer">
-            <DollarSign className="h-8 w-8 text-slate-400 mb-3" />
-            <h3 className="font-semibold text-lg">給料申請</h3>
-            <p className="text-sm text-slate-400 mt-1">報酬の申請・管理</p>
+            <Calculator className="h-8 w-8 text-slate-400 mb-3" />
+            <h3 className="font-semibold text-lg">💰 報酬計算</h3>
+            <p className="text-sm text-slate-400 mt-1">収入シミュレーション</p>
             <Badge variant="outline" className="mt-4" style={{ borderColor: 'rgba(0, 196, 204, 0.3)', backgroundColor: 'rgba(0, 196, 204, 0.1)', color: '#00C4CC' }}>New</Badge>
           </Card>
         </Link>
