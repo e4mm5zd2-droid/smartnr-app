@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.routers import router
 from app.routers.ai import router as ai_router
 from app.routers.ai_matching import router as ai_matching_router
+from app.routers.commission import router as commission_router
 
 # Supabaseを使用するため、SQLAlchemyのテーブル自動作成は不要
 
@@ -28,6 +29,7 @@ app.add_middleware(
 app.include_router(router, prefix="/api", tags=["CRUD API"])
 app.include_router(ai_router, prefix="/api", tags=["AI機能"])
 app.include_router(ai_matching_router, prefix="/api", tags=["AIマッチング"])
+app.include_router(commission_router, prefix="/api/commission", tags=["報酬計算"])
 
 
 @app.get("/")
