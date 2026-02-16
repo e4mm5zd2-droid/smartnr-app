@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
@@ -7,6 +8,19 @@ from app.models import ScoutLink, Scout, Shop, LinkClick, LinkConversion
 from datetime import datetime
 
 router = APIRouter()
+
+
+def cors_response(data: dict, status_code: int = 200) -> JSONResponse:
+    """CORS対応のレスポンスを返す"""
+    return JSONResponse(
+        content=data,
+        status_code=status_code,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
 
 
 class RedirectResponse(BaseModel):
@@ -83,50 +97,53 @@ async def redirect_short_url(
     return RedirectResponse(redirect_url=redirect_url)
 
 
-@router.get("/lp/data/{unique_code}", response_model=LPDataResponse)
+@router.get("/lp/data/{unique_code}")
 def get_lp_data(unique_code: str, db: Session = Depends(get_db)):
     """ミニLPに表示するデータを返す"""
     
-    link = db.query(ScoutLink).filter(ScoutLink.unique_code == unique_code).first()
-    
-    if not link:
-        raise HTTPException(status_code=404, detail="Link not found")
-    
-    # スカウト情報取得
-    scout = db.query(Scout).filter(Scout.id == link.scout_id).first()
-    scout_name = scout.name if scout else "スカウト"
-    
-    # 店舗情報取得
-    shop_name = None
-    shop_area = None
-    if link.shop_id:
-        shop = db.query(Shop).filter(Shop.id == link.shop_id).first()
-        if shop:
-            shop_name = shop.name
-            shop_area = shop.area if hasattr(shop, 'area') else None
-    
-    # ヘッドライン・説明のデフォルト
-    if link.link_type == "recruit":
-        default_headline = "ナイトワーク始めませんか？"
-        default_description = "月収30万円〜も可能。未経験OK。完全サポートでナイトワークデビュー。"
-    else:
-        default_headline = "指名が増える。売上が見える。"
-        default_description = "SmartNR キャスト版で効率的に働く。売上管理・シフト管理・指名分析。"
-    
-    return LPDataResponse(
-        is_valid=True,
-        link_type=link.link_type,
-        scout_name=scout_name,
-        shop_name=shop_name,
-        shop_area=shop_area,
-        headline=link.lp_headline if link.lp_headline else default_headline,
-        description=link.lp_description if link.lp_description else default_description,
-        template=link.lp_template,
-        unique_code=link.unique_code,
-    )
+    try:
+        link = db.query(ScoutLink).filter(ScoutLink.unique_code == unique_code).first()
+        
+        if not link:
+            return cors_response({"is_valid": False, "error": "Link not found"}, 404)
+        
+        # スカウト情報取得
+        scout = db.query(Scout).filter(Scout.id == link.scout_id).first()
+        scout_name = scout.name if scout else "スカウト"
+        
+        # 店舗情報取得
+        shop_name = None
+        shop_area = None
+        if link.shop_id:
+            shop = db.query(Shop).filter(Shop.id == link.shop_id).first()
+            if shop:
+                shop_name = shop.name
+                shop_area = shop.area if hasattr(shop, 'area') else None
+        
+        # ヘッドライン・説明のデフォルト
+        if link.link_type == "recruit":
+            default_headline = "ナイトワーク始めませんか？"
+            default_description = "月収30万円〜も可能。未経験OK。完全サポートでナイトワークデビュー。"
+        else:
+            default_headline = "指名が増える。売上が見える。"
+            default_description = "SmartNR キャスト版で効率的に働く。売上管理・シフト管理・指名分析。"
+        
+        return cors_response({
+            "is_valid": True,
+            "link_type": link.link_type,
+            "scout_name": scout_name,
+            "shop_name": shop_name,
+            "shop_area": shop_area,
+            "headline": link.lp_headline if link.lp_headline else default_headline,
+            "description": link.lp_description if link.lp_description else default_description,
+            "template": link.lp_template,
+            "unique_code": link.unique_code,
+        })
+    except Exception as e:
+        return cors_response({"is_valid": False, "error": str(e)}, 500)
 
 
-@router.post("/lp/submit/{unique_code}", response_model=LPSubmitResponse)
+@router.post("/lp/submit/{unique_code}")
 def submit_lp_form(
     unique_code: str,
     request: LPSubmitRequest,
@@ -134,37 +151,41 @@ def submit_lp_form(
 ):
     """ミニLPからの応募/登録を受け付ける"""
     
-    link = db.query(ScoutLink).filter(ScoutLink.unique_code == unique_code).first()
-    
-    if not link:
-        raise HTTPException(status_code=404, detail="Link not found")
-    
-    if not link.is_active or link.force_disabled:
-        raise HTTPException(status_code=400, detail="このリンクは現在利用できません")
-    
-    # submission_count +1
-    link.submission_count += 1
-    
-    # conversion_type決定
-    conversion_type = "recruit_apply" if link.link_type == "recruit" else "app_register"
-    
-    # link_conversionsにINSERT
-    conversion = LinkConversion(
-        link_id=link.id,
-        scout_id=link.scout_id,
-        conversion_type=conversion_type,
-        name=request.name,
-        line_id=request.line_id,
-        phone=request.phone,
-        age=request.age,
-        shop_id=link.shop_id,
-        status="submitted",
-    )
-    
-    db.add(conversion)
-    db.commit()
-    
-    return LPSubmitResponse(
-        success=True,
-        message="ありがとうございます！担当者からご連絡します。"
-    )
+    try:
+        link = db.query(ScoutLink).filter(ScoutLink.unique_code == unique_code).first()
+        
+        if not link:
+            return cors_response({"success": False, "message": "Link not found"}, 404)
+        
+        if not link.is_active or link.force_disabled:
+            return cors_response({"success": False, "message": "このリンクは現在利用できません"}, 400)
+        
+        # submission_count +1
+        link.submission_count += 1
+        
+        # conversion_type決定
+        conversion_type = "recruit_apply" if link.link_type == "recruit" else "app_register"
+        
+        # link_conversionsにINSERT
+        conversion = LinkConversion(
+            link_id=link.id,
+            scout_id=link.scout_id,
+            conversion_type=conversion_type,
+            name=request.name,
+            line_id=request.line_id,
+            phone=request.phone,
+            age=request.age,
+            shop_id=link.shop_id,
+            status="submitted",
+        )
+        
+        db.add(conversion)
+        db.commit()
+        
+        return cors_response({
+            "success": True,
+            "message": "ありがとうございます！担当者からご連絡します。"
+        })
+    except Exception as e:
+        db.rollback()
+        return cors_response({"success": False, "message": str(e)}, 500)

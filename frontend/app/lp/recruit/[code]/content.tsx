@@ -28,8 +28,8 @@ export function RecruitLPContent({ code }: { code: string }) {
   // バリデーションエラー
   const [errors, setErrors] = useState<{ name?: string; lineId?: string; age?: string }>({});
 
-  // API URL（Render本番URL）
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com';
+  // API URL（Render本番URL - ハードコード）
+  const API_BASE_URL = 'https://smartnr-backend.onrender.com';
 
   // LP情報取得
   useEffect(() => {
