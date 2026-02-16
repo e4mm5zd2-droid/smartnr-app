@@ -1,7 +1,7 @@
 {
   "name": "SmartNR - ナイトワーク求人管理システム",
   "short_name": "SmartNR",
-  "description": "AI顔分析・店舗マッチング機能搭載のナイトワークキャスト管理システム",
+  "description": "紹介トラッキング・AI分析機能搭載のナイトワーク管理システム",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0F172A",
