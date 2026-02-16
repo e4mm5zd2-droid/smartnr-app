@@ -9,7 +9,7 @@ import { LanguageSwitcher } from './language-switcher';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-10 flex h-14 min-h-[56px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 backdrop-blur-sm lg:h-16 lg:px-6 safe-area-padding">
+    <header className="sticky top-0 z-10 flex h-14 min-h-[56px] items-center justify-between gap-2 border-b border-border bg-background/95 backdrop-blur-sm lg:h-16 lg:px-6" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))', paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}>
       <div className="flex items-center gap-3 flex-shrink-0">
         <MobileSidebar />
       </div>

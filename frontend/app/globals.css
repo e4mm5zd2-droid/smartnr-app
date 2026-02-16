@@ -193,6 +193,21 @@
   }
 }
 
+/* PWA モード対応（ステータスバー・ノッチ） */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* iOS PWA ステータスバー対応 */
+@media (display-mode: standalone) {
+  body {
+    padding-top: max(env(safe-area-inset-top), 20px);
+  }
+}
+
 /* アクティブ状態のフィードバック */
 button:active,
 a:active {
