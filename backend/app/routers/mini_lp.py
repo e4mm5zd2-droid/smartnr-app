@@ -14,9 +14,11 @@ class RedirectResponse(BaseModel):
 
 
 class LPDataResponse(BaseModel):
+    is_valid: bool = True
     link_type: str
     scout_name: str
     shop_name: Optional[str]
+    shop_area: Optional[str]
     headline: str
     description: str
     template: str
@@ -96,10 +98,12 @@ def get_lp_data(unique_code: str, db: Session = Depends(get_db)):
     
     # 店舗情報取得
     shop_name = None
+    shop_area = None
     if link.shop_id:
         shop = db.query(Shop).filter(Shop.id == link.shop_id).first()
         if shop:
             shop_name = shop.name
+            shop_area = shop.area if hasattr(shop, 'area') else None
     
     # ヘッドライン・説明のデフォルト
     if link.link_type == "recruit":
@@ -110,9 +114,11 @@ def get_lp_data(unique_code: str, db: Session = Depends(get_db)):
         default_description = "SmartNR キャスト版で効率的に働く。売上管理・シフト管理・指名分析。"
     
     return LPDataResponse(
+        is_valid=True,
         link_type=link.link_type,
         scout_name=scout_name,
         shop_name=shop_name,
+        shop_area=shop_area,
         headline=link.lp_headline if link.lp_headline else default_headline,
         description=link.lp_description if link.lp_description else default_description,
         template=link.lp_template,
