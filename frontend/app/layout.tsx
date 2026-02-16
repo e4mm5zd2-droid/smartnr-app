@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { LayoutWrapper } from "@/components/layout-wrapper";
@@ -14,19 +14,20 @@ export const metadata: Metadata = {
   title: "SmartNR - ナイトワーク求人管理",
   description: "AI顔分析・店舗マッチング機能搭載のナイトワークキャスト管理システム",
   manifest: "/manifest.json",
-  themeColor: "#00C4CC",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "SmartNR",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#00C4CC",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
