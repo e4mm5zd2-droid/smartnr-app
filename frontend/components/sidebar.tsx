@@ -19,7 +19,8 @@ import {
   Crown,
   BarChart3,
   FileText,
-  Wallet
+  Wallet,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -62,6 +63,11 @@ const navItems: NavItem[] = [
     title: '面接スケジュール',
     href: '/schedule',
     icon: Calendar,
+  },
+  {
+    title: '🔗 紹介リンク',
+    href: '/tracking',
+    icon: LinkIcon,
   },
   {
     title: '💰 報酬計算',
