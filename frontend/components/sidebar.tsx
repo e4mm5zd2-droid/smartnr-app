@@ -220,7 +220,6 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
       <div className="p-4 space-y-2">
         <div className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-slate-800">
           <Avatar className="h-9 w-9">
-            <AvatarImage src="/avatar-placeholder.png" alt="京極 蓮" />
             <AvatarFallback style={{ backgroundColor: '#00C4CC' }} className="text-white">
               KR
             </AvatarFallback>
