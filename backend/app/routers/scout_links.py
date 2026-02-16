@@ -80,15 +80,13 @@ class ConversionStatusUpdateRequest(BaseModel):
 
 
 def generate_unique_code(scout_name: str, link_type: str, db: Session) -> str:
-    """ユニークコードを生成（重複チェック付き）"""
-    # スカウト名をローマ字化（簡易版：カタカナ→アルファベット）
-    scout_prefix = scout_name[:4].upper().replace(" ", "")
+    """ユニークコードを生成（ASCII文字のみ・重複チェック付き）"""
     type_prefix = "RCT" if link_type == "recruit" else "APP"
     
     max_attempts = 10
     for _ in range(max_attempts):
-        random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-        unique_code = f"{scout_prefix}-{type_prefix}-{random_suffix}"
+        random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        unique_code = f"{type_prefix}-{random_part}"
         
         # 重複チェック
         existing = db.query(ScoutLink).filter(ScoutLink.unique_code == unique_code).first()

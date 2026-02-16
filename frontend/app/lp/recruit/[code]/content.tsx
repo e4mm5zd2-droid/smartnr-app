@@ -35,7 +35,7 @@ export function RecruitLPContent({ code }: { code: string }) {
   useEffect(() => {
     const fetchLPData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/lp/data/${code}`);
+        const response = await fetch(`${API_BASE_URL}/api/lp/data/${encodeURIComponent(code)}`);
         if (!response.ok) {
           setError(true);
           setLoading(false);
@@ -84,7 +84,7 @@ export function RecruitLPContent({ code }: { code: string }) {
     setSubmitting(true);
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/lp/submit/${code}`, {
+      const response = await fetch(`${API_BASE_URL}/api/lp/submit/${encodeURIComponent(code)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
