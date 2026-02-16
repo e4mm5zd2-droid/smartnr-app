@@ -378,7 +378,7 @@ export default function MasterConversionsPage() {
 
       {/* コンバージョンリスト */}
       <div className="space-y-3">
-        {data?.conversions.map((conv) => {
+        {data?.conversions && data.conversions.map((conv) => {
           const nextStatus = getNextStatus(conv.status);
           return (
             <Card key={conv.id} className="border-slate-700 bg-slate-900/50 p-4">
@@ -528,7 +528,7 @@ export default function MasterConversionsPage() {
         </div>
       )}
 
-      {data?.conversions.length === 0 && (
+      {(!data?.conversions || data.conversions.length === 0) && (
         <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
           <p className="text-slate-400">該当するコンバージョンがありません</p>
         </Card>

@@ -82,10 +82,14 @@ export default function ScoutTrackingPage() {
     );
   }
 
-  if (!data) {
+  if (!data || !data.recruit || !data.app_invite) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-slate-400">データが取得できませんでした</p>
+        <div className="text-center space-y-4">
+          <p className="text-slate-400">データが取得できませんでした</p>
+          <p className="text-sm text-slate-500">バックエンドAPIに接続できません</p>
+          <Button onClick={fetchData}>再試行</Button>
+        </div>
       </div>
     );
   }
@@ -175,7 +179,7 @@ export default function ScoutTrackingPage() {
               </Link>
             </div>
             <div className="space-y-3">
-              {data.recruit.recent_conversions.length > 0 ? (
+              {data.recruit.recent_conversions && data.recruit.recent_conversions.length > 0 ? (
                 data.recruit.recent_conversions.map((conv) => (
                   <ConversionCard
                     key={conv.id}

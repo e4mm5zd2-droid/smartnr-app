@@ -295,7 +295,7 @@ export default function MasterSBPaymentsPage() {
 
       {/* スカウト別SB一覧 */}
       <div className="space-y-3">
-        {data?.payments.map((payment) => {
+        {data?.payments && data.payments.map((payment) => {
           const isExpanded = expandedScout === payment.scout_id;
           const scoutConvIds = payment.unpaid_conversions.map((c) => c.id);
           const selectedForThisScout = scoutConvIds.filter((id) => selectedConversions.has(id));
@@ -408,7 +408,7 @@ export default function MasterSBPaymentsPage() {
         </Button>
       )}
 
-      {data?.payments.length === 0 && (
+      {(!data?.payments || data.payments.length === 0) && (
         <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
           <p className="text-slate-400">SB支払いデータがありません</p>
         </Card>

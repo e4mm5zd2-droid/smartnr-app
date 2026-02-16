@@ -45,10 +45,11 @@ function NewLinkContent() {
       const res = await fetch(`${API_BASE_URL}/api/stores`);
       if (res.ok) {
         const data = await res.json();
-        setShops(data.stores || []);
+        setShops(Array.isArray(data.stores) ? data.stores : []);
       }
     } catch (err) {
       console.error('Failed to fetch shops:', err);
+      setShops([]);
     }
   };
 

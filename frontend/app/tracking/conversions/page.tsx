@@ -286,7 +286,7 @@ function MyConversionsContent() {
 
       {/* コンバージョン一覧 */}
       <div className="space-y-3">
-        {data?.conversions.map((conv) => (
+        {data?.conversions && data.conversions.map((conv) => (
           <ConversionCard
             key={conv.id}
             id={conv.id}
@@ -307,7 +307,7 @@ function MyConversionsContent() {
       </div>
 
       {/* ページネーション */}
-      {data && data.total_pages > 1 && (
+      {data && data.total_pages && data.total_pages > 1 && (
         <div className="flex justify-center gap-2">
           <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
             前へ
@@ -321,7 +321,7 @@ function MyConversionsContent() {
         </div>
       )}
 
-      {data?.conversions.length === 0 && (
+      {(!data?.conversions || data.conversions.length === 0) && (
         <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
           <p className="text-slate-400">該当するコンバージョンがありません</p>
         </Card>

@@ -146,7 +146,7 @@ export default function MyLinksPage() {
 
       {/* リンク一覧 */}
       <div className="space-y-3">
-        {data?.links.map((link) => (
+        {data?.links && data.links.map((link) => (
           <LinkCard
             key={link.id}
             id={link.id}
@@ -165,7 +165,7 @@ export default function MyLinksPage() {
         ))}
       </div>
 
-      {data?.links.length === 0 && (
+      {(!data?.links || data.links.length === 0) && (
         <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
           <p className="text-slate-400 mb-4">まだリンクがありません</p>
           <Link href="/tracking/new">
