@@ -9,18 +9,16 @@ import { LanguageSwitcher } from './language-switcher';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-10 flex h-16 min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/50 px-3 backdrop-blur-sm lg:px-6 safe-area-padding">
-      <div className="flex items-center gap-2 flex-shrink-0">
+    <header className="sticky top-0 z-10 flex h-14 min-h-[56px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 backdrop-blur-sm lg:h-16 lg:px-6 safe-area-padding">
+      <div className="flex items-center gap-3 flex-shrink-0">
         <MobileSidebar />
-        <div className="hidden sm:block">
-          <SearchPopover />
-        </div>
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-        <div className="sm:hidden">
-          <SearchPopover />
-        </div>
+      <div className="hidden lg:flex flex-1 max-w-md">
+        <SearchPopover />
+      </div>
+
+      <div className="flex items-center gap-1.5 flex-shrink-0">
         <PushNotificationButton />
         <LanguageSwitcher />
         <ThemeToggle />
