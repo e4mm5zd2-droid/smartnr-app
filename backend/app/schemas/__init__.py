@@ -203,3 +203,148 @@ class InterviewResponse(InterviewBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ==================== Scout Link Schemas ====================
+
+class ScoutLinkBase(BaseModel):
+    """スカウトリンク基本スキーマ"""
+    scout_id: int = Field(..., description="スカウトID")
+    link_type: str = Field(..., description="リンクタイプ: recruit | app_invite")
+    unique_code: str = Field(..., description="ユニークコード")
+    short_url: str = Field(..., description="短縮URL")
+    qr_code_path: str = Field(default="", description="QRコード画像パス")
+    shop_id: Optional[int] = Field(None, description="紹介先店舗ID（recruit用）")
+    lp_headline: str = Field(default="", description="LPヘッドライン")
+    lp_description: str = Field(default="", description="LP説明文")
+    lp_template: str = Field(default="default", description="LPテンプレート")
+    is_active: bool = Field(default=True, description="有効フラグ")
+
+
+class ScoutLinkCreate(ScoutLinkBase):
+    """スカウトリンク作成スキーマ"""
+    pass
+
+
+class ScoutLinkUpdate(BaseModel):
+    """スカウトリンク更新スキーマ"""
+    lp_headline: Optional[str] = None
+    lp_description: Optional[str] = None
+    lp_template: Optional[str] = None
+    is_active: Optional[bool] = None
+    force_disabled: Optional[bool] = None
+    force_disabled_reason: Optional[str] = None
+
+
+class ScoutLinkResponse(ScoutLinkBase):
+    """スカウトリンクレスポンススキーマ"""
+    id: int
+    click_count: int
+    submission_count: int
+    force_disabled: bool
+    force_disabled_reason: str
+    force_disabled_by: Optional[int]
+    force_disabled_at: Optional[datetime]
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==================== Link Click Schemas ====================
+
+class LinkClickBase(BaseModel):
+    """リンククリック基本スキーマ"""
+    link_id: int = Field(..., description="リンクID")
+    ip_address: str = Field(default="", description="IPアドレス")
+    user_agent: str = Field(default="", description="User-Agent")
+    referer: str = Field(default="", description="リファラー")
+
+
+class LinkClickCreate(LinkClickBase):
+    """リンククリック作成スキーマ"""
+    pass
+
+
+class LinkClickResponse(LinkClickBase):
+    """リンククリックレスポンススキーマ"""
+    id: int
+    clicked_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==================== Link Conversion Schemas ====================
+
+class LinkConversionBase(BaseModel):
+    """リンクコンバージョン基本スキーマ"""
+    link_id: int = Field(..., description="リンクID")
+    scout_id: int = Field(..., description="スカウトID")
+    conversion_type: str = Field(..., description="コンバージョンタイプ: recruit_apply | app_register")
+    name: str = Field(..., description="応募者/登録者名")
+    line_id: str = Field(default="", description="LINE ID")
+    phone: str = Field(default="", description="電話番号")
+    age: Optional[int] = Field(None, description="年齢")
+    shop_id: Optional[int] = Field(None, description="店舗ID（recruit用）")
+    cast_id: Optional[int] = Field(None, description="キャストID（紐づけ後）")
+    status: str = Field(default="submitted", description="ステータス")
+    notes: str = Field(default="", description="備考")
+
+
+class LinkConversionCreate(LinkConversionBase):
+    """リンクコンバージョン作成スキーマ"""
+    pass
+
+
+class LinkConversionUpdate(BaseModel):
+    """リンクコンバージョン更新スキーマ"""
+    status: Optional[str] = None
+    cast_id: Optional[int] = None
+    contacted_at: Optional[datetime] = None
+    interviewed_at: Optional[datetime] = None
+    trial_at: Optional[datetime] = None
+    hired_at: Optional[datetime] = None
+    registered_at: Optional[datetime] = None
+    estimated_monthly_sales: Optional[Decimal] = None
+    sb_rate: Optional[Decimal] = None
+    sb_amount: Optional[Decimal] = None
+    scout_share_rate: Optional[Decimal] = None
+    scout_income: Optional[Decimal] = None
+    is_sb_paid: Optional[bool] = None
+    sb_paid_at: Optional[datetime] = None
+    notes: Optional[str] = None
+
+
+class LinkConversionResponse(LinkConversionBase):
+    """リンクコンバージョンレスポンススキーマ"""
+    id: int
+    submitted_at: datetime
+    contacted_at: Optional[datetime]
+    interviewed_at: Optional[datetime]
+    trial_at: Optional[datetime]
+    hired_at: Optional[datetime]
+    registered_at: Optional[datetime]
+    estimated_monthly_sales: Decimal
+    sb_rate: Optional[Decimal]
+    sb_amount: Decimal
+    scout_share_rate: Decimal
+    scout_income: Decimal
+    is_sb_paid: bool
+    sb_paid_at: Optional[datetime]
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==================== Scout Link Stats Schema ====================
+
+class ScoutLinkStatsResponse(BaseModel):
+    """スカウトリンク統計レスポンススキーマ"""
+    scout_id: int
+    link_type: str
+    total_links: int
+    total_clicks: int
+    total_submissions: int
+    cvr_percent: Optional[Decimal]
+
+    model_config = ConfigDict(from_attributes=True)
