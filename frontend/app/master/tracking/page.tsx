@@ -98,18 +98,28 @@ export default function MasterTrackingPage() {
   }, [period]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const [reportRes, overviewRes, scoutsRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/master/tracking/daily-report?master_id=${MASTER_ID}`),
-        fetch(`${API_BASE_URL}/api/master/tracking/overview?master_id=${MASTER_ID}&period=${period}`),
-        fetch(`${API_BASE_URL}/api/master/tracking/scouts?master_id=${MASTER_ID}&sort_by=sb_earned&period=${period}`)
+        fetch(`${API_BASE_URL}/api/master/tracking/daily-report?master_id=${MASTER_ID}`).catch(err => {
+          console.error('Daily report fetch failed:', err);
+          return null;
+        }),
+        fetch(`${API_BASE_URL}/api/master/tracking/overview?master_id=${MASTER_ID}&period=${period}`).catch(err => {
+          console.error('Overview fetch failed:', err);
+          return null;
+        }),
+        fetch(`${API_BASE_URL}/api/master/tracking/scouts?master_id=${MASTER_ID}&sort_by=sb_earned&period=${period}`).catch(err => {
+          console.error('Scouts fetch failed:', err);
+          return null;
+        })
       ]);
 
-      if (reportRes.ok) setDailyReport(await reportRes.json());
-      if (overviewRes.ok) setOverview(await overviewRes.json());
-      if (scoutsRes.ok) {
+      if (reportRes?.ok) setDailyReport(await reportRes.json());
+      if (overviewRes?.ok) setOverview(await overviewRes.json());
+      if (scoutsRes?.ok) {
         const data = await scoutsRes.json();
-        setScouts(data.scouts);
+        setScouts(data.scouts || []);
       }
     } catch (err) {
       console.error('Failed to fetch master data:', err);
