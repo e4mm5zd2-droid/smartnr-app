@@ -72,9 +72,7 @@ class Scout(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(Text, unique=True, nullable=False)
     name = Column(Text, nullable=False)
-    rank = Column(Text, default='bronze')  # bronze, silver, gold, platinum, diamond
-    experience_years = Column(Integer, default=0)
-    total_recruited = Column(Integer, default=0)
+    role = Column(Text, default='scout')  # 'admin' | 'scout'
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
