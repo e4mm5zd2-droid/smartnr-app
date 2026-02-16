@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { use } from 'react';
 import { RecruitLPContent } from './content';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RecruitLPPage({ params }: { params: { code: string } }) {
-  return <RecruitLPContent code={params.code} />;
+export default function RecruitLPPage({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = use(params);
+  return <RecruitLPContent code={code} />;
 }
