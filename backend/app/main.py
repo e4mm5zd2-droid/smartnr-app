@@ -6,6 +6,8 @@ from app.routers.ai import router as ai_router
 from app.routers.ai_matching import router as ai_matching_router
 from app.routers.commission import router as commission_router
 from app.routers.cast_parser import router as cast_parser_router
+from app.routers.scout_links import router as scout_links_router
+from app.routers.mini_lp import router as mini_lp_router
 
 # Supabaseを使用するため、SQLAlchemyのテーブル自動作成は不要
 
@@ -32,6 +34,8 @@ app.include_router(ai_router, prefix="/api", tags=["AI機能"])
 app.include_router(ai_matching_router, prefix="/api", tags=["AIマッチング"])
 app.include_router(commission_router, prefix="/api/commission", tags=["報酬計算"])
 app.include_router(cast_parser_router, prefix="/api/cast-parser", tags=["キャスト情報解析"])
+app.include_router(scout_links_router, prefix="/api/links", tags=["スカウトリンク管理"])
+app.include_router(mini_lp_router, prefix="/api", tags=["ミニLP"])
 
 
 @app.get("/")
