@@ -52,15 +52,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // TODO: マスターページ権限チェック（将来実装）
-  // const masterPaths = ['/master/'];
-  // const isMasterPath = masterPaths.some(path => 
-  //   request.nextUrl.pathname.startsWith(path)
-  // );
-  // if (isMasterPath) {
-  //   // scoutsテーブルからroleを取得してチェック
-  //   // role !== 'admin' の場合は / にリダイレクト
-  // }
+  // TODO: マスターページ権限チェック（現在はダミー認証。本番では要実装）
+  const masterPaths = ['/master/'];
+  const isMasterPath = masterPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path)
+  );
+  
+  if (isMasterPath && session) {
+    // TODO: scoutsテーブルからroleを取得してチェック
+    // 現在はダミーでID=3のみマスター権限とする
+    // 将来的には: Supabaseクエリでuser.email -> scouts.role を確認
+    // role !== 'admin' の場合は / にリダイレクト
+    
+    // ダミー実装（将来削除）
+    // const userEmail = session.user.email;
+    // if (userEmail !== 'admin@smartnr.jp') {
+    //   return NextResponse.redirect(new URL('/', request.url));
+    // }
+  }
 
   return response;
 }

@@ -15,7 +15,11 @@ import {
   Menu,
   X,
   Calendar,
-  Calculator
+  Calculator,
+  Crown,
+  BarChart3,
+  FileText,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -71,6 +75,24 @@ const navItems: NavItem[] = [
   },
 ];
 
+const masterNavItems: NavItem[] = [
+  {
+    title: '📊 トラッキング統括',
+    href: '/master/tracking',
+    icon: BarChart3,
+  },
+  {
+    title: '📋 全コンバージョン',
+    href: '/master/tracking/conversions',
+    icon: FileText,
+  },
+  {
+    title: '💰 SB支払い管理',
+    href: '/master/tracking/sb-payments',
+    icon: Wallet,
+  },
+];
+
 // ランクバッジのスタイリング関数
 function getRankStyle(rank: string) {
   switch (rank) {
@@ -100,6 +122,10 @@ function getRankStyle(rank: string) {
 
 function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname();
+  
+  // TODO: Supabaseから実際のroleを取得。現在はダミー
+  const userRole = 'admin'; // 'admin' または 'scout'
+  const isMaster = userRole === 'admin';
 
   return (
     <div className="flex h-full flex-col">
@@ -148,6 +174,43 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
               </Link>
             );
           })}
+          
+          {/* マスター管理セクション（role='admin'のみ表示） */}
+          {isMaster && (
+            <>
+              <Separator className="my-3 bg-slate-700" />
+              <div className="px-3 py-2">
+                <p className="text-xs font-semibold uppercase tracking-wider flex items-center gap-2" style={{ color: '#FFD700' }}>
+                  <Crown className="h-4 w-4" />
+                  マスター管理
+                </p>
+              </div>
+              {masterNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onLinkClick}
+                    className={cn(
+                      'flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      isActive
+                        ? 'text-slate-100'
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                    )}
+                    style={isActive ? { backgroundColor: 'rgba(255, 215, 0, 0.15)', borderLeft: '3px solid #FFD700' } : undefined}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </>
+          )}
         </nav>
       </ScrollArea>
 
