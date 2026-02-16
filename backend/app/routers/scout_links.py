@@ -122,53 +122,59 @@ def generate_qr_code(url: str) -> str:
 def generate_link(request: LinkGenerateRequest, db: Session = Depends(get_db)):
     """スカウト紹介リンクを発行"""
     
-    # スカウト情報取得
-    scout = db.query(Scout).filter(Scout.id == request.scout_id).first()
-    if not scout:
-        raise HTTPException(status_code=404, detail="Scout not found")
-    
-    # 店舗情報取得（recruitの場合）
-    shop_name = None
-    if request.link_type == "recruit" and request.shop_id:
-        shop = db.query(Shop).filter(Shop.id == request.shop_id).first()
-        if shop:
-            shop_name = shop.name
-    
-    # unique_code生成
-    unique_code = generate_unique_code(scout.name, request.link_type, db)
-    
-    # short_url構築
-    short_url = f"{SMARTNR_BASE_URL}/r/{unique_code}"
-    
-    # QRコード生成
-    qr_code_base64 = generate_qr_code(short_url)
-    
-    # DBに保存
-    new_link = ScoutLink(
-        scout_id=request.scout_id,
-        link_type=request.link_type,
-        unique_code=unique_code,
-        short_url=short_url,
-        qr_code_path="",  # base64なのでパス不要
-        shop_id=request.shop_id,
-        lp_headline=request.lp_headline,
-        lp_description=request.lp_description,
-        lp_template=request.lp_template,
-    )
-    
-    db.add(new_link)
-    db.commit()
-    db.refresh(new_link)
-    
-    return LinkGenerateResponse(
-        id=new_link.id,
-        link_type=new_link.link_type,
-        unique_code=new_link.unique_code,
-        short_url=new_link.short_url,
-        qr_code_base64=qr_code_base64,
-        shop_name=shop_name,
-        scout_name=scout.name,
-    )
+    try:
+        # スカウト情報取得
+        scout = db.query(Scout).filter(Scout.id == request.scout_id).first()
+        if not scout:
+            raise HTTPException(status_code=404, detail="Scout not found")
+        
+        # 店舗情報取得（recruitの場合）
+        shop_name = None
+        if request.link_type == "recruit" and request.shop_id:
+            shop = db.query(Shop).filter(Shop.id == request.shop_id).first()
+            if shop:
+                shop_name = shop.name
+        
+        # unique_code生成
+        unique_code = generate_unique_code(scout.name, request.link_type, db)
+        
+        # short_url構築
+        short_url = f"{SMARTNR_BASE_URL}/r/{unique_code}"
+        
+        # QRコード生成
+        qr_code_base64 = generate_qr_code(short_url)
+        
+        # DBに保存
+        new_link = ScoutLink(
+            scout_id=request.scout_id,
+            link_type=request.link_type,
+            unique_code=unique_code,
+            short_url=short_url,
+            qr_code_path="",
+            shop_id=request.shop_id,
+            lp_headline=request.lp_headline,
+            lp_description=request.lp_description,
+            lp_template=request.lp_template,
+        )
+        
+        db.add(new_link)
+        db.commit()
+        db.refresh(new_link)
+        
+        return LinkGenerateResponse(
+            id=new_link.id,
+            link_type=new_link.link_type,
+            unique_code=new_link.unique_code,
+            short_url=new_link.short_url,
+            qr_code_base64=qr_code_base64,
+            shop_name=shop_name,
+            scout_name=scout.name,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error: {type(e).__name__}: {str(e)}")
 
 
 @router.get("/my-links", response_model=MyLinksResponse)

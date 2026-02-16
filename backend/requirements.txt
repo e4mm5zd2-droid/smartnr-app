@@ -21,3 +21,4 @@ supabase==2.10.0
 openai==1.59.5
 python-multipart==0.0.20
 qrcode[pil]==8.0
+Pillow==11.1.0
