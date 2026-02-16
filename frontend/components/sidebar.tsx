@@ -278,7 +278,7 @@ export function MobileSidebar() {
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden"
+          className="lg:hidden h-10 w-10 min-w-[40px]"
         >
           <Menu className="h-6 w-6" />
         </Button>
