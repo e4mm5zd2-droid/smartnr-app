@@ -8,6 +8,16 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // 公開パス（認証不要）
+  const publicPaths = ['/login', '/lp/', '/r/'];
+  const isPublicPath = publicPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path)
+  );
+
+  if (isPublicPath) {
+    return NextResponse.next();  // 認証不要でそのまま通す
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -41,6 +51,16 @@ export async function middleware(request: NextRequest) {
     const redirectUrl = new URL('/', request.url);
     return NextResponse.redirect(redirectUrl);
   }
+
+  // TODO: マスターページ権限チェック（将来実装）
+  // const masterPaths = ['/master/'];
+  // const isMasterPath = masterPaths.some(path => 
+  //   request.nextUrl.pathname.startsWith(path)
+  // );
+  // if (isMasterPath) {
+  //   // scoutsテーブルからroleを取得してチェック
+  //   // role !== 'admin' の場合は / にリダイレクト
+  // }
 
   return response;
 }
