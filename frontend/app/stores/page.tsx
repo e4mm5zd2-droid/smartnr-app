@@ -56,10 +56,7 @@ export default function StoresPage() {
     <div className="space-y-6 p-4">
       {/* ヘッダー */}
       <div>
-        <h1 className="text-2xl font-bold text-white">店舗管理</h1>
-        <p className="mt-1 text-sm text-zinc-400">
-          提携店舗の一覧と詳細情報
-        </p>
+        <h1 className="text-2xl font-bold text-white">店舗</h1>
       </div>
 
       {/* 検索 */}

@@ -141,12 +141,22 @@ export default function NewCastPage() {
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com';
       let parsedData: any = {};
 
+      // タイムアウト付きfetch
+      const fetchWithTimeout = (url: string, options: RequestInit, timeout = 10000) => {
+        return Promise.race([
+          fetch(url, options),
+          new Promise<Response>((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
       // 画像がある場合は画像解析を優先
       if (selectedImage) {
         const formDataImg = new FormData();
         formDataImg.append('file', selectedImage);
 
-        const res = await fetch(`${API_BASE_URL}/api/cast-parser/image`, {
+        const res = await fetchWithTimeout(`${API_BASE_URL}/api/cast-parser/image`, {
           method: 'POST',
           body: formDataImg,
         });
@@ -157,7 +167,7 @@ export default function NewCastPage() {
       } 
       // テキストのみの場合
       else if (aiInputText.trim()) {
-        const res = await fetch(`${API_BASE_URL}/api/cast-parser/text`, {
+        const res = await fetchWithTimeout(`${API_BASE_URL}/api/cast-parser/text`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ raw_text: aiInputText }),
@@ -183,9 +193,13 @@ export default function NewCastPage() {
 
       setAnalysisSuccess(true);
       setTimeout(() => setAnalysisSuccess(false), 3000);
-    } catch (err) {
+    } catch (err: any) {
       console.error('AI analysis error:', err);
-      setError('AI解析に失敗しました。もう一度お試しください。');
+      if (err.message === 'Request timeout') {
+        setError('⚠️ バックエンドに接続できません。手動入力してください。\n💡 管理者にバックエンドの起動を確認してもらってください。');
+      } else {
+        setError('⚠️ AI解析に失敗しました。手動入力してください。');
+      }
     } finally {
       setIsAnalyzing(false);
     }
@@ -258,7 +272,7 @@ export default function NewCastPage() {
   }
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-4 pb-24">
       {/* ヘッダー */}
       <div className="flex items-center gap-3">
         <Link href="/casts">

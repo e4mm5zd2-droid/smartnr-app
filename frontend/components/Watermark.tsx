@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 export function Watermark() {
   const [currentTime, setCurrentTime] = useState('');
-  const userName = '京極 蓮'; // TODO: 将来的にはSupabase認証から取得
 
   useEffect(() => {
     // 初回レンダリング時の時刻を設定
@@ -27,7 +26,7 @@ export function Watermark() {
   }, []);
 
   // SVGパターンを生成（テキストを斜めにリピート）
-  const watermarkText = `${userName} ${currentTime}`;
+  const watermarkText = currentTime;
   
   // SVGをData URIに変換してbackground-imageとして使用
   const svgString = `

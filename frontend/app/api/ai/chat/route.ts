@@ -12,6 +12,26 @@ interface ChatMessage {
   content: string;
 }
 
+// フォールバック応答生成（xAI APIが利用できない場合）
+function generateFallbackResponse(userMessage: string): string {
+  const message = userMessage.toLowerCase();
+  
+  // キーワードベースの簡易応答
+  if (message.includes('20代') || message.includes('キャスト')) {
+    return '申し訳ございません。現在AI機能は一時的に利用できません。\n\n代わりに、左メニューの「キャスト」ページから手動で検索していただけます。年齢や条件で絞り込みが可能です。\n\n💡 管理者にxAI APIキーの設定を依頼してください。';
+  }
+  
+  if (message.includes('店舗') || message.includes('祇園') || message.includes('時給')) {
+    return '申し訳ございません。現在AI機能は一時的に利用できません。\n\n「店舗」ページから提携店舗の情報をご確認いただけます。エリアや時給などの条件で検索できます。\n\n💡 管理者にxAI APIキーの設定を依頼してください。';
+  }
+  
+  if (message.includes('報酬') || message.includes('計算') || message.includes('給料')) {
+    return '申し訳ございません。現在AI機能は一時的に利用できません。\n\n「紹介トラッキング」ページから報酬の詳細を確認できます。\n\n💡 管理者にxAI APIキーの設定を依頼してください。';
+  }
+  
+  return '申し訳ございません。現在AI機能は一時的に利用できません。\n\nSmartNRの各機能は左メニューからご利用いただけます：\n• キャスト管理\n• 店舗情報\n• 紹介トラッキング\n• AI店舗マッチング\n\n💡 完全なAI機能を利用するには、管理者にxAI APIキーの設定を依頼してください。';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { messages } = await request.json();
@@ -21,6 +41,22 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid messages format' },
         { status: 400 }
       );
+    }
+
+    // xAI APIキーの確認
+    const apiKey = process.env.XAI_API_KEY;
+    if (!apiKey || apiKey === 'your-xai-api-key-here' || apiKey.length < 20) {
+      console.warn('xAI API Key not configured - using fallback response');
+      const lastUserMessage = messages[messages.length - 1]?.content || '';
+      const fallbackResponse = generateFallbackResponse(lastUserMessage);
+      
+      return NextResponse.json({
+        message: {
+          role: 'assistant',
+          content: fallbackResponse,
+        },
+        fallback: true,
+      });
     }
 
     // システムプロンプト
@@ -77,13 +113,18 @@ export async function POST(request: NextRequest) {
       console.error('API Response Error:', error.response.data);
     }
 
-    return NextResponse.json(
-      {
-        error: 'AI応答の生成中にエラーが発生しました',
-        details: error.message,
+    // エラー時もフォールバックを使用
+    const lastUserMessage = (await request.json()).messages?.slice(-1)[0]?.content || '';
+    const fallbackResponse = generateFallbackResponse(lastUserMessage);
+
+    return NextResponse.json({
+      message: {
+        role: 'assistant',
+        content: fallbackResponse,
       },
-      { status: 500 }
-    );
+      fallback: true,
+      error: error.message,
+    });
   }
 }
 

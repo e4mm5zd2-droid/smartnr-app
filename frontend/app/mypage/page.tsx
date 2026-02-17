@@ -11,8 +11,8 @@ import { createClient } from '@/lib/supabase';
 
 export default function MyPage() {
   const [user, setUser] = useState({
-    name: '京極 蓮',
-    email: 'kyogoku@example.com',
+    name: 'ユーザー',
+    email: 'user@example.com',
     joinedAt: '2025-12-01',
   });
   const [role, setRole] = useState<string | null>(null);
@@ -23,8 +23,8 @@ export default function MyPage() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
         setUser({
-          name: authUser.user_metadata?.display_name || authUser.email?.split('@')[0] || '京極 蓮',
-          email: authUser.email || 'kyogoku@example.com',
+          name: authUser.user_metadata?.display_name || authUser.email?.split('@')[0] || 'ユーザー',
+          email: authUser.email || 'user@example.com',
           joinedAt: authUser.created_at || '2025-12-01',
         });
         setRole(authUser.user_metadata?.role || null);
@@ -75,26 +75,18 @@ export default function MyPage() {
         </Card>
 
         {/* 設定 */}
-        <Card className="bg-zinc-900 p-2 rounded-xl">
-          <div className="space-y-1">
-            {isAdmin && (
+        {isAdmin && (
+          <Card className="bg-zinc-900 p-2 rounded-xl">
+            <div className="space-y-1">
               <Link href="/admin">
                 <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-zinc-800">
                   <Shield className="h-5 w-5 mr-3" />
                   🔧 管理画面
                 </Button>
               </Link>
-            )}
-            <Button variant="ghost" className="w-full justify-start h-12 text-zinc-400 hover:bg-zinc-800 hover:text-white">
-              <Settings className="h-5 w-5 mr-3" />
-              設定
-            </Button>
-            <Button variant="ghost" className="w-full justify-start h-12 text-zinc-400 hover:bg-zinc-800 hover:text-white">
-              <Bell className="h-5 w-5 mr-3" />
-              通知設定
-            </Button>
-          </div>
-        </Card>
+            </div>
+          </Card>
+        )}
 
         {/* ログアウト */}
         <div className="px-2">

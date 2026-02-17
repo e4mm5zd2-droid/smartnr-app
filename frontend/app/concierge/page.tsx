@@ -628,38 +628,6 @@ export default function ConciergePage() {
                               )}
                             </div>
                           )}
-
-                          {/* 推定報酬 */}
-                          {(() => {
-                            const commission = calculateCommission({
-                              castEstimatedSales: 500000,
-                              sbType: 'sales_percentage',
-                              sbRate: shop.sb_rate,
-                              scoutShare: 70,
-                              paymentCycle: 'monthly',
-                            });
-                            return (
-                              <div className="border-t border-zinc-800 pt-3">
-                                <p className="text-xs font-medium text-zinc-400 mb-2">💰 推定報酬</p>
-                                <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-3">
-                                  <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs text-zinc-400">SB率 {shop.sb_rate}% / 売上50万 / 取分70%</span>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-lg font-bold text-zinc-200">
-                                      {formatCurrency(commission.scoutIncome)}<span className="text-xs text-zinc-400 font-normal">/月</span>
-                                    </span>
-                                    <Link
-                                      href={`/commission?shop_id=${shop.shop_id}`}
-                                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors bg-zinc-700 text-zinc-200 hover:bg-zinc-600"
-                                    >
-                                      📊 詳しく計算
-                                    </Link>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })()}
                         </div>
                       </Card>
                     ))}

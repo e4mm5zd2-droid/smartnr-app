@@ -57,10 +57,10 @@ export function NotificationsPopover() {
           <Bell className="h-5 w-5 text-zinc-400" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 border-slate-800 bg-slate-900 p-0" align="end">
+      <PopoverContent className="w-80 border-zinc-800 bg-zinc-900 p-0" align="end">
         {/* ヘッダー */}
-        <div className="flex items-center justify-between border-b border-slate-800 p-4">
-          <h3 className="font-semibold">通知</h3>
+        <div className="flex items-center justify-between border-b border-zinc-800 p-4">
+          <h3 className="font-semibold text-white">通知</h3>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="h-7 text-xs">
               すべて既読
@@ -72,16 +72,16 @@ export function NotificationsPopover() {
         <ScrollArea className="h-[400px]">
           {mockNotifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Bell className="mb-3 h-12 w-12 text-slate-600" />
-              <p className="text-sm text-slate-400">通知はありません</p>
+              <Bell className="mb-3 h-12 w-12 text-zinc-600" />
+              <p className="text-sm text-zinc-400">通知はありません</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-800">
+            <div className="divide-y divide-zinc-800">
               {mockNotifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-4 transition-colors hover:bg-slate-800/50 ${
-                    !notification.read ? 'bg-slate-800/20' : ''
+                  className={`p-4 transition-colors hover:bg-zinc-800/50 ${
+                    !notification.read ? 'bg-zinc-800/20' : ''
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -128,11 +128,10 @@ export function NotificationsPopover() {
         </ScrollArea>
 
         {/* フッター */}
-        <div className="border-t border-slate-800 p-2">
+        <div className="border-t border-zinc-800 p-2">
           <Button 
             variant="ghost" 
-            className="w-full justify-center text-xs"
-            style={{ color: '#00C4CC' }}
+            className="w-full justify-center text-xs text-zinc-400 hover:text-white"
           >
             すべての通知を見る
           </Button>
