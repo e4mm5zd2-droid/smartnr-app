@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   ArrowLeft,
   Phone,
@@ -19,6 +18,7 @@ import {
   Building2,
   DollarSign,
   TrendingUp,
+  UserCircle2,
 } from 'lucide-react';
 import { Cast } from '@/lib/api';
 import { CastCategoryBadge, type CastCategory } from '@/components/cast-category-badge';
@@ -108,12 +108,8 @@ export default function CastDetailPage() {
         {/* メイン情報 */}
         <Card className="border-slate-800 bg-slate-900/50 p-6 lg:col-span-2">
           <div className="flex items-start gap-6">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src={cast.photos_url || undefined} />
-              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-2xl text-white">
-                {cast.genji_name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            {/* 写真表示削除 → デフォルトアイコン */}
+            <UserCircle2 className="h-24 w-24 flex-shrink-0 text-slate-500" />
             <div className="flex-1 space-y-4">
               <div>
                 <h2 className="text-2xl font-bold">{cast.genji_name}</h2>

@@ -1,210 +1,181 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Users, Store, TrendingUp, DollarSign, Sparkles, ArrowRight, Calendar, Calculator } from 'lucide-react';
-import { getCasts, getStores } from '@/lib/api';
+import { UserPlus, Users, Store, ArrowRight, Calculator, Sparkles, Calendar, MessageSquare, Heart, Repeat2 } from 'lucide-react';
+
+// キャンペーン掲示板のモックデータ（将来的にSupabaseのcampaignsテーブルから取得）
+const campaigns = [
+  {
+    id: 1,
+    title: '🔥 2月限定キャンペーン',
+    body: '祇園エリアの新規紹介で報酬1.5倍！今月中に成約した案件が対象です。',
+    date: '2026-02-15',
+    tag: 'キャンペーン',
+    likes: 12,
+    comments: 3,
+  },
+  {
+    id: 2,
+    title: '✨ 新システムリリース',
+    body: 'AI Conciergeに「店舗マッチング」機能が追加されました。キャストの希望条件を入力するだけで最適な店舗を提案します。',
+    date: '2026-02-14',
+    tag: 'お知らせ',
+    likes: 8,
+    comments: 1,
+  },
+  {
+    id: 3,
+    title: '💰 報酬シミュレーター公開',
+    body: 'リアルタイムで収入計算ができる「報酬シミュレーター」をリリースしました。店舗別の分配率も確認できます。',
+    date: '2026-02-13',
+    tag: 'アップデート',
+    likes: 15,
+    comments: 5,
+  },
+  {
+    id: 4,
+    title: '🎉 紹介トラッキング機能追加',
+    body: 'スカウト専用の紹介リンクが発行できるようになりました。QRコード生成・クリック数・成約率の確認が可能です。',
+    date: '2026-02-12',
+    tag: 'アップデート',
+    likes: 20,
+    comments: 7,
+  },
+  {
+    id: 5,
+    title: '📋 週次レポート配信開始',
+    body: '毎週月曜に先週の活動サマリーをLINEで配信します。成約数・報酬・ランキングをチェックしましょう。',
+    date: '2026-02-10',
+    tag: 'お知らせ',
+    likes: 6,
+    comments: 2,
+  },
+];
 
 export default function Home() {
-  const [castsCount, setCastsCount] = useState(0);
-  const [storesCount, setStoresCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [casts, stores] = await Promise.all([getCasts(), getStores()]);
-        setCastsCount(casts.length);
-        setStoresCount(stores.length);
-      } catch (error) {
-        console.error('データ取得エラー:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* 統計カード */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
-              <Users className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">総キャスト数</p>
-              <p className="text-3xl font-bold">{loading ? '--' : castsCount}</p>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-1 text-sm">
-            <TrendingUp className="h-3 w-3 text-green-400" />
-            <span className="text-green-400">+12%</span>
-            <span className="text-slate-500">vs 先月</span>
-          </div>
-        </Card>
+    <div className="space-y-6 p-4">
+      {/* キャンペーン掲示板（Xタイムライン風） */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-white">お知らせ</h2>
+          <Badge variant="outline" className="border-[#00C4CC]/30 bg-[#00C4CC]/10 text-[#00C4CC]">
+            {campaigns.length}件
+          </Badge>
+        </div>
+        
+        <div className="space-y-3">
+          {campaigns.map((campaign) => (
+            <Card
+              key={campaign.id}
+              className="border-slate-800 bg-slate-900/50 p-4 hover:bg-slate-800/50 transition-colors cursor-pointer"
+            >
+              <div className="flex gap-3">
+                {/* アバター */}
+                <div
+                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                  style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}
+                >
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
 
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-orange-500">
-              <Store className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">提携店舗</p>
-              <p className="text-3xl font-bold">{loading ? '--' : storesCount}</p>
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-slate-500">
-            京都エリア中心
-          </div>
-        </Card>
-
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-500">
-              <TrendingUp className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">今月成約</p>
-              <p className="text-3xl font-bold">28</p>
-            </div>
-          </div>
-          <div className="mt-4 text-sm">
-            成約率 <span className="font-semibold text-green-400">67%</span>
-          </div>
-        </Card>
-
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500">
-              <DollarSign className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">報酬見込み</p>
-              <p className="text-3xl font-bold">¥420k</p>
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-slate-500">
-            今月の総額
-          </div>
-        </Card>
+                {/* 本文 */}
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-white">SmartNR 公式</span>
+                    <span className="text-xs text-slate-500">
+                      {new Date(campaign.date).toLocaleDateString('ja-JP', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                  
+                  <h3 className="font-bold text-white">{campaign.title}</h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">{campaign.body}</p>
+                  
+                  <div className="flex items-center gap-4 pt-2">
+                    <Badge
+                      variant="outline"
+                      className="border-slate-700 bg-slate-800/50 text-slate-300 text-xs"
+                    >
+                      {campaign.tag}
+                    </Badge>
+                    
+                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                      <button className="flex items-center gap-1 hover:text-red-400 transition-colors">
+                        <Heart className="h-3.5 w-3.5" />
+                        <span>{campaign.likes}</span>
+                      </button>
+                      <button className="flex items-center gap-1 hover:text-blue-400 transition-colors">
+                        <MessageSquare className="h-3.5 w-3.5" />
+                        <span>{campaign.comments}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* クイックアクション */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Link href="/casts/new">
-          <Card className="group border-slate-800 p-6 transition-all cursor-pointer" 
-            style={{ background: 'linear-gradient(135deg, rgba(0, 196, 204, 0.1) 0%, rgba(0, 196, 204, 0.05) 100%)' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(0, 196, 204, 0.5)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 196, 204, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgb(30 41 59)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <UserPlus className="h-8 w-8 mb-3" style={{ color: '#00C4CC' }} />
-            <h3 className="font-semibold text-lg">新規登録</h3>
-            <p className="text-sm text-slate-400 mt-1">AI分析で登録</p>
-            <ArrowRight className="h-4 w-4 mt-4 group-hover:translate-x-1 transition-transform" style={{ color: '#00C4CC' }} />
-          </Card>
-        </Link>
-
-        <Link href="/casts">
-          <Card className="group border-slate-800 bg-slate-900/50 p-6 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer">
-            <Users className="h-8 w-8 text-slate-400 mb-3" />
-            <h3 className="font-semibold text-lg">キャスト一覧</h3>
-            <p className="text-sm text-slate-400 mt-1">登録者の検索・管理</p>
-            <ArrowRight className="h-4 w-4 text-slate-400 mt-4 group-hover:translate-x-1 transition-transform" />
-          </Card>
-        </Link>
-
-        <Link href="/stores">
-          <Card className="group border-slate-800 bg-slate-900/50 p-6 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer">
-            <Store className="h-8 w-8 text-slate-400 mb-3" />
-            <h3 className="font-semibold text-lg">店舗管理</h3>
-            <p className="text-sm text-slate-400 mt-1">提携店舗の詳細情報</p>
-            <ArrowRight className="h-4 w-4 text-slate-400 mt-4 group-hover:translate-x-1 transition-transform" />
-          </Card>
-        </Link>
-
-        <Link href="/commission">
-          <Card className="group border-slate-800 bg-slate-900/50 p-6 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer">
-            <Calculator className="h-8 w-8 text-slate-400 mb-3" />
-            <h3 className="font-semibold text-lg">💰 報酬計算</h3>
-            <p className="text-sm text-slate-400 mt-1">収入シミュレーション</p>
-            <Badge variant="outline" className="mt-4" style={{ borderColor: 'rgba(0, 196, 204, 0.3)', backgroundColor: 'rgba(0, 196, 204, 0.1)', color: '#00C4CC' }}>New</Badge>
-          </Card>
-        </Link>
-      </div>
-
-      {/* 最近の活動 */}
-      <Card className="border-slate-800 bg-slate-900/50">
-        <div className="p-6 border-b border-slate-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">最近の活動</h2>
-              <p className="text-sm text-slate-400 mt-1">直近の登録・マッチング状況</p>
-            </div>
-            <Link href="/casts">
-              <Button variant="ghost" size="sm">
-                すべて見る
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-        <div className="p-6 space-y-4">
-          {[
-            { id: 1, name: 'あやか', action: '面接完了', shop: 'Club LION', time: '2時間前', status: 'success' },
-            { id: 2, name: 'みゆき', action: 'AI分析完了', shop: 'PLATINUM', time: '5時間前', status: 'info' },
-            { id: 3, name: 'さくら', action: '新規登録', shop: '-', time: '1日前', status: 'pending' },
-          ].map((activity) => (
-            <Link
-              key={activity.id}
-              href={`/casts/${activity.id}`}
-              className="block"
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">クイックアクション</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <Link href="/casts/new">
+            <Card
+              className="group border-slate-800 p-4 transition-all cursor-pointer h-full"
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 196, 204, 0.1) 0%, rgba(0, 196, 204, 0.05) 100%)',
+              }}
             >
-              <div className="flex items-center justify-between rounded-lg p-4 transition-all hover:bg-slate-800/50 cursor-pointer hover:border hover:border-slate-700">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
-                    {activity.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-medium">{activity.name}</p>
-                    <p className="text-sm text-slate-400">{activity.action} · {activity.shop}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
-                    <Calendar className="h-3 w-3" />
-                    {activity.time}
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={
-                      activity.status === 'success'
-                        ? 'border-green-500/30 bg-green-500/10 text-green-400'
-                        : activity.status === 'info'
-                        ? 'border-blue-500/30 bg-blue-500/10 text-blue-400'
-                        : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
-                    }
-                  >
-                    {activity.status === 'success' ? '完了' : activity.status === 'info' ? '処理中' : '保留'}
-                  </Badge>
-                </div>
-              </div>
-            </Link>
-          ))}
+              <UserPlus className="h-7 w-7 mb-2" style={{ color: '#00C4CC' }} />
+              <h3 className="font-semibold text-white">新規登録</h3>
+              <p className="text-xs text-slate-400 mt-1">キャスト情報登録</p>
+            </Card>
+          </Link>
+
+          <Link href="/casts">
+            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full">
+              <Users className="h-7 w-7 text-slate-400 mb-2" />
+              <h3 className="font-semibold text-white">キャスト</h3>
+              <p className="text-xs text-slate-400 mt-1">一覧・検索</p>
+            </Card>
+          </Link>
+
+          <Link href="/stores">
+            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full">
+              <Store className="h-7 w-7 text-slate-400 mb-2" />
+              <h3 className="font-semibold text-white">店舗</h3>
+              <p className="text-xs text-slate-400 mt-1">管理・詳細</p>
+            </Card>
+          </Link>
+
+          <Link href="/commission">
+            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full relative">
+              <Calculator className="h-7 w-7 text-slate-400 mb-2" />
+              <h3 className="font-semibold text-white">報酬計算</h3>
+              <p className="text-xs text-slate-400 mt-1">シミュレーター</p>
+              <Badge
+                variant="outline"
+                className="absolute top-2 right-2 text-[10px] px-1.5 py-0.5"
+                style={{
+                  borderColor: 'rgba(0, 196, 204, 0.3)',
+                  backgroundColor: 'rgba(0, 196, 204, 0.1)',
+                  color: '#00C4CC',
+                }}
+              >
+                NEW
+              </Badge>
+            </Card>
+          </Link>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
