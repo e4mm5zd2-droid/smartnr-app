@@ -54,15 +54,7 @@ export function NotificationsPopover() {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
-            <span 
-              className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white"
-              style={{ backgroundColor: '#00C4CC' }}
-            >
-              {unreadCount}
-            </span>
-          )}
+          <Bell className="h-5 w-5 text-zinc-400" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 border-slate-800 bg-slate-900 p-0" align="end">
@@ -70,15 +62,6 @@ export function NotificationsPopover() {
         <div className="flex items-center justify-between border-b border-slate-800 p-4">
           <h3 className="font-semibold">通知</h3>
           <div className="flex items-center gap-2">
-            {unreadCount > 0 && (
-              <Badge 
-                variant="outline" 
-                className="text-xs"
-                style={{ borderColor: 'rgba(0, 196, 204, 0.3)', backgroundColor: 'rgba(0, 196, 204, 0.1)', color: '#00C4CC' }}
-              >
-                {unreadCount}件未読
-              </Badge>
-            )}
             <Button variant="ghost" size="sm" className="h-7 text-xs">
               すべて既読
             </Button>

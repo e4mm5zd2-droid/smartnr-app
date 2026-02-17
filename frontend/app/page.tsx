@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +57,7 @@ const campaigns = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const displayedCampaigns = campaigns.slice(0, 2);
   const hasMore = campaigns.length > 2;
 
@@ -114,7 +116,10 @@ export default function Home() {
 
         {/* すべて見るリンク */}
         {hasMore && (
-          <button className="w-full text-center text-sm text-zinc-400 hover:text-white transition-colors py-2">
+          <button 
+            onClick={() => router.push('/announcements')}
+            className="w-full text-center text-sm text-zinc-400 hover:text-white transition-colors py-2"
+          >
             すべて見る →
           </button>
         )}
