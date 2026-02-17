@@ -77,7 +77,7 @@ export default function ScoutTrackingPage() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-zinc-400">読み込み中...</p>
       </div>
     );
   }
@@ -86,8 +86,8 @@ export default function ScoutTrackingPage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-slate-400">データが取得できませんでした</p>
-          <p className="text-sm text-slate-500">バックエンドAPIに接続できません</p>
+          <p className="text-zinc-400">データが取得できませんでした</p>
+          <p className="text-sm text-zinc-500">バックエンドAPIに接続できません</p>
           <Button onClick={fetchData}>再試行</Button>
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function ScoutTrackingPage() {
 
       {/* タブ */}
       <Tabs defaultValue="recruit" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 bg-slate-800">
+        <TabsList className="grid w-full grid-cols-2 bg-zinc-800">
           <TabsTrigger value="recruit">🌙 キャスト募集</TabsTrigger>
           <TabsTrigger value="app">💎 アプリ紹介</TabsTrigger>
         </TabsList>
@@ -118,44 +118,44 @@ export default function ScoutTrackingPage() {
             <StatCard title="リンク" value={data.recruit.total_links} />
             <StatCard title="クリック" value={data.recruit.total_clicks} />
             <StatCard title="応募" value={data.recruit.total_submissions} />
-            <StatCard title="SB" value={`¥${Math.floor(data.recruit.total_sb / 10000)}万`} accent="#00C4CC" />
+            <StatCard title="SB" value={`¥${Math.floor(data.recruit.total_sb / 10000)}万`} accent="#a1a1aa" />
           </div>
 
           {/* ファネル */}
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">📊 ファネル</h3>
             <FunnelBar
               label="クリック"
               value={data.recruit.total_clicks}
               max={data.recruit.total_clicks}
-              color="#00C4CC"
+              color="#71717a"
             />
             <FunnelBar
               label="応募"
               value={data.recruit.funnel.submitted}
               max={data.recruit.total_clicks}
-              color="#00C4CC"
+              color="#71717a"
             />
             <FunnelBar
               label="面接"
               value={data.recruit.funnel.interviewed}
               max={data.recruit.total_clicks}
-              color="#00C4CC"
+              color="#71717a"
             />
-            <FunnelBar label="体入" value={data.recruit.funnel.trial} max={data.recruit.total_clicks} color="#00C4CC" />
-            <FunnelBar label="採用" value={data.recruit.funnel.hired} max={data.recruit.total_clicks} color="#00C4CC" />
+            <FunnelBar label="体入" value={data.recruit.funnel.trial} max={data.recruit.total_clicks} color="#71717a" />
+            <FunnelBar label="採用" value={data.recruit.funnel.hired} max={data.recruit.total_clicks} color="#71717a" />
             <FunnelBar
               label="稼働中"
               value={data.recruit.funnel.active}
               max={data.recruit.total_clicks}
-              color="#00C4CC"
+              color="#71717a"
             />
-            <div className="mt-4 pt-4 border-t border-slate-700 flex justify-between text-sm">
-              <span className="text-slate-400">
-                CVR: <span className="text-[#00C4CC] font-bold">{data.recruit.cvr}%</span>
+            <div className="mt-4 pt-4 border-t border-zinc-700 flex justify-between text-sm">
+              <span className="text-zinc-400">
+                CVR: <span className="text-zinc-300 font-bold">{data.recruit.cvr}%</span>
               </span>
-              <span className="text-slate-400">
-                💰 未払いSB: <span className="text-[#FF6B6B] font-bold">¥{data.recruit.unpaid_sb.toLocaleString()}</span>
+              <span className="text-zinc-400">
+                💰 未払いSB: <span className="text-zinc-300 font-bold">¥{data.recruit.unpaid_sb.toLocaleString()}</span>
               </span>
             </div>
           </Card>
@@ -169,7 +169,7 @@ export default function ScoutTrackingPage() {
           </Link>
 
           {/* 最近の応募 */}
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-white">📋 最近の応募</h3>
               <Link href="/tracking/conversions?type=recruit">
@@ -193,7 +193,7 @@ export default function ScoutTrackingPage() {
                   />
                 ))
               ) : (
-                <p className="text-center text-slate-400 py-8">まだ応募がありません</p>
+                <p className="text-center text-zinc-400 py-8">まだ応募がありません</p>
               )}
             </div>
           </Card>
@@ -205,46 +205,46 @@ export default function ScoutTrackingPage() {
           <div className="grid grid-cols-3 gap-4">
             <StatCard title="リンク" value={data.app_invite.total_links} />
             <StatCard title="クリック" value={data.app_invite.total_clicks} />
-            <StatCard title="登録" value={data.app_invite.total_submissions} accent="#FF69B4" />
+            <StatCard title="登録" value={data.app_invite.total_submissions} accent="#a1a1aa" />
           </div>
 
           {/* ファネル */}
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">📊 ファネル</h3>
             <FunnelBar
               label="クリック"
               value={data.app_invite.total_clicks}
               max={data.app_invite.total_clicks}
-              color="#FF69B4"
+              color="#71717a"
             />
             <FunnelBar
               label="登録"
               value={data.app_invite.funnel.submitted}
               max={data.app_invite.total_clicks}
-              color="#FF69B4"
+              color="#71717a"
             />
             <FunnelBar
               label="利用中"
               value={data.app_invite.funnel.active}
               max={data.app_invite.total_clicks}
-              color="#FF69B4"
+              color="#71717a"
             />
             <FunnelBar
               label="離脱"
               value={data.app_invite.funnel.churned}
               max={data.app_invite.total_clicks}
-              color="#FF6B6B"
+              color="#52525b"
             />
-            <div className="mt-4 pt-4 border-t border-slate-700">
-              <span className="text-slate-400">
-                CVR: <span className="text-[#FF69B4] font-bold">{data.app_invite.cvr}%</span>
+            <div className="mt-4 pt-4 border-t border-zinc-700">
+              <span className="text-zinc-400">
+                CVR: <span className="text-zinc-300 font-bold">{data.app_invite.cvr}%</span>
               </span>
             </div>
           </Card>
 
           {/* リンク作成ボタン */}
           <Link href="/tracking/new?type=app_invite">
-            <Button className="w-full" size="lg" style={{ backgroundColor: '#FF69B4' }}>
+            <Button className="w-full" size="lg">
               <Plus className="h-5 w-5 mr-2" />
               アプリ紹介リンクを作成
             </Button>

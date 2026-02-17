@@ -26,9 +26,9 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       <PWARegister />
-      <div className="flex min-h-screen flex-col bg-slate-950">
+      <div className="flex min-h-screen flex-col bg-zinc-950">
         <Header />
-        <main className="flex-1 overflow-y-auto pb-20 max-w-lg mx-auto w-full">
+        <main className="flex-1 overflow-y-auto pb-20 pt-6 max-w-lg mx-auto w-full">
           {children}
         </main>
         <BottomNavigation />

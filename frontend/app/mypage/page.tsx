@@ -2,11 +2,9 @@
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { LogoutButton } from '@/components/logout-button';
-import { User, Mail, Calendar, Award, Settings, Bell, HelpCircle, FileText } from 'lucide-react';
+import { UserCircle2, Mail, Calendar, Award, Settings, Bell, HelpCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MyPage() {
@@ -39,16 +37,12 @@ export default function MyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="max-w-lg mx-auto space-y-6 p-6">
+    <div className="min-h-screen bg-zinc-950">
+      <div className="max-w-lg mx-auto space-y-4 p-4">
         {/* プロフィールカード */}
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarFallback style={{ backgroundColor: '#00C4CC' }} className="text-white text-2xl">
-                {user.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <UserCircle2 className="h-16 w-16 text-zinc-500" />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h2 className="text-xl font-bold text-white">{user.name}</h2>
@@ -62,11 +56,11 @@ export default function MyPage() {
                   {user.rank}
                 </Badge>
               </div>
-              <p className="text-sm text-slate-400 flex items-center gap-1">
+              <p className="text-sm text-zinc-400 flex items-center gap-1">
                 <Mail className="h-3 w-3" />
                 {user.email}
               </p>
-              <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
+              <p className="text-xs text-zinc-500 flex items-center gap-1 mt-1">
                 <Calendar className="h-3 w-3" />
                 参加日: {new Date(user.joinedAt).toLocaleDateString('ja-JP')}
               </p>
@@ -75,22 +69,16 @@ export default function MyPage() {
         </Card>
 
         {/* メニュー */}
-        <Card className="border-slate-800 bg-slate-900/50 p-2">
+        <Card className="bg-zinc-900 p-2 rounded-xl">
           <div className="space-y-1">
             <Link href="/tracking">
-              <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-slate-800">
+              <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-zinc-800">
                 <Award className="h-5 w-5 mr-3" />
                 紹介トラッキング
               </Button>
             </Link>
-            <Link href="/commission">
-              <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-slate-800">
-                <FileText className="h-5 w-5 mr-3" />
-                報酬シミュレーター
-              </Button>
-            </Link>
             <Link href="/concierge">
-              <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-slate-800">
+              <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-zinc-800">
                 <HelpCircle className="h-5 w-5 mr-3" />
                 AI Concierge
               </Button>
@@ -99,13 +87,13 @@ export default function MyPage() {
         </Card>
 
         {/* 設定 */}
-        <Card className="border-slate-800 bg-slate-900/50 p-2">
+        <Card className="bg-zinc-900 p-2 rounded-xl">
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-slate-800">
+            <Button variant="ghost" className="w-full justify-start h-12 text-zinc-400 hover:bg-zinc-800 hover:text-white">
               <Settings className="h-5 w-5 mr-3" />
               設定
             </Button>
-            <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-slate-800">
+            <Button variant="ghost" className="w-full justify-start h-12 text-zinc-400 hover:bg-zinc-800 hover:text-white">
               <Bell className="h-5 w-5 mr-3" />
               通知設定
             </Button>

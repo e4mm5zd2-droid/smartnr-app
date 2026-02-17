@@ -212,7 +212,7 @@ function MyConversionsContent() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-zinc-400">読み込み中...</p>
       </div>
     );
   }
@@ -232,7 +232,7 @@ function MyConversionsContent() {
 
       {/* 検索 */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
         <Input
           placeholder="名前で検索..."
           value={searchQuery}
@@ -243,7 +243,7 @@ function MyConversionsContent() {
       </div>
 
       {/* フィルター */}
-      <Card className="border-slate-700 bg-slate-900/50 p-4">
+      <Card className="border-0 bg-zinc-900/50 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Select value={linkType} onValueChange={setLinkType}>
             <SelectTrigger>
@@ -312,7 +312,7 @@ function MyConversionsContent() {
           <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
             前へ
           </Button>
-          <span className="flex items-center px-4 text-slate-400">
+          <span className="flex items-center px-4 text-zinc-400">
             {page} / {data.total_pages}
           </span>
           <Button variant="outline" disabled={page === data.total_pages} onClick={() => setPage(page + 1)}>
@@ -322,8 +322,8 @@ function MyConversionsContent() {
       )}
 
       {(!data?.conversions || data.conversions.length === 0) && (
-        <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
-          <p className="text-slate-400">該当するコンバージョンがありません</p>
+        <Card className="border-0 bg-zinc-900/50 p-12 text-center">
+          <p className="text-zinc-400">該当するコンバージョンがありません</p>
         </Card>
       )}
 
@@ -339,7 +339,7 @@ function MyConversionsContent() {
             {statusUpdateModal.newStatus === 'hired' && (
               <>
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">推定月間売上</label>
+                  <label className="text-sm text-zinc-400 mb-2 block">推定月間売上</label>
                   <Slider
                     min={100000}
                     max={2000000}
@@ -351,9 +351,9 @@ function MyConversionsContent() {
                     ¥{statusUpdateModal.estimatedRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-[#00C4CC]/10 border border-[#00C4CC]">
-                  <p className="text-sm text-slate-300">SBプレビュー</p>
-                  <p className="text-xl font-bold text-[#00C4CC]">
+                <div className="p-4 rounded-lg bg-zinc-800 border border-zinc-600">
+                  <p className="text-sm text-zinc-300">SBプレビュー</p>
+                  <p className="text-xl font-bold text-zinc-300">
                     SB: ¥{sb.toLocaleString()} → あなたの手取り: ¥{scoutShare.toLocaleString()}
                   </p>
                 </div>
@@ -414,7 +414,7 @@ function MyConversionsContent() {
 
 export default function MyConversionsPage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p className="text-slate-400">読み込み中...</p></div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p className="text-zinc-400">読み込み中...</p></div>}>
       <MyConversionsContent />
     </Suspense>
   );

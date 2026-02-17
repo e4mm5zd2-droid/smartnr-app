@@ -48,24 +48,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
       <div className="w-full max-w-md space-y-8">
         {/* ロゴ・ヘッダー */}
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg" style={{ backgroundColor: '#00C4CC' }}>
-            <span className="text-3xl font-bold text-white">SN</span>
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
+            <span className="text-3xl font-bold text-zinc-950">SN</span>
           </div>
           <h1 className="text-3xl font-bold">
             <span className="text-white">Smart</span>
             <span className="smartnr-logo-nr text-4xl">NR</span>
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-zinc-400">
             ナイトワーク求人管理システム
           </p>
         </div>
 
         {/* ログインフォーム */}
-        <Card className="border-slate-800 bg-slate-900/50 p-8 backdrop-blur-sm">
+        <Card className="bg-zinc-900 p-8 backdrop-blur-sm rounded-2xl">
           <form onSubmit={handleLogin} className="space-y-6">
             {error && (
               <div className="flex items-start gap-2 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
@@ -76,11 +76,11 @@ export default function LoginPage() {
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
+                <label htmlFor="email" className="text-sm font-medium text-white">
                   メールアドレス
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="email"
                     type="email"
@@ -89,18 +89,18 @@ export default function LoginPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="bg-slate-800 pl-10"
+                    className="bg-zinc-800 border-none pl-10 focus:ring-1 focus:ring-zinc-600"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
+                <label htmlFor="password" className="text-sm font-medium text-white">
                   パスワード
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -109,13 +109,13 @@ export default function LoginPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="bg-slate-800 pl-10 pr-10"
+                    className="bg-zinc-800 border-none pl-10 pr-10 focus:ring-1 focus:ring-zinc-600"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-300"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -131,15 +131,14 @@ export default function LoginPage() {
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-700 bg-slate-800 focus:ring-offset-0"
-                  style={{ accentColor: '#00C4CC' }}
+                  className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 focus:ring-offset-0"
+                  style={{ accentColor: '#ffffff' }}
                 />
-                <span className="text-slate-400">ログイン状態を保持</span>
+                <span className="text-zinc-400">ログイン状態を保持</span>
               </label>
               <Link
                 href="/reset-password"
-                className="hover:underline"
-                style={{ color: '#00C4CC' }}
+                className="text-zinc-400 hover:text-white hover:underline"
               >
                 パスワードを忘れた?
               </Link>
@@ -148,14 +147,11 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full text-white transition-all"
-              style={{ backgroundColor: '#00C4CC' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#00A3AA')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#00C4CC')}
+              className="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-semibold rounded-xl h-12 transition-all"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950 border-t-transparent" />
                   ログイン中...
                 </span>
               ) : (
@@ -169,12 +165,11 @@ export default function LoginPage() {
         </Card>
 
         {/* フッター */}
-        <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-zinc-400">
           アカウントをお持ちでない方は{' '}
           <Link
             href="/signup"
-            className="hover:underline"
-            style={{ color: '#00C4CC' }}
+            className="text-white hover:underline"
           >
             新規登録
           </Link>

@@ -93,7 +93,7 @@ export default function MyLinksPage() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-zinc-400">読み込み中...</p>
       </div>
     );
   }
@@ -166,8 +166,8 @@ export default function MyLinksPage() {
       </div>
 
       {(!data?.links || data.links.length === 0) && (
-        <Card className="border-slate-700 bg-slate-900/50 p-12 text-center">
-          <p className="text-slate-400 mb-4">まだリンクがありません</p>
+        <Card className="border-0 bg-zinc-900/50 p-12 text-center">
+          <p className="text-zinc-400 mb-4">まだリンクがありません</p>
           <Link href="/tracking/new">
             <Button>
               <Plus className="h-4 w-4 mr-1" />
@@ -190,7 +190,7 @@ export default function MyLinksPage() {
                   <img src={qrModal.linkData.qr_code} alt="QR Code" className="w-64 h-64" />
                 </div>
               </div>
-              <p className="text-center text-sm text-slate-400 font-mono">
+              <p className="text-center text-sm text-zinc-400 font-mono">
                 {qrModal.linkData.unique_code}
               </p>
               <Button className="w-full" onClick={handleDownloadQr}>

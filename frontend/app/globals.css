@@ -49,9 +49,6 @@
 
 :root {
   --radius: 0.625rem;
-  --smartnr-blue: #00C4CC;
-  --smartnr-blue-dark: #00A3AA;
-  --smartnr-blue-light: #33D4DB;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -235,40 +232,28 @@ a:active {
   user-select: none;
 }
 
-/* SmartNR ブランドグラデーション */
-.gradient-smartnr {
-  background: linear-gradient(135deg, var(--smartnr-blue) 0%, var(--smartnr-blue-light) 100%);
-}
-
-.gradient-smartnr-hover:hover {
-  background: linear-gradient(135deg, var(--smartnr-blue-dark) 0%, var(--smartnr-blue) 100%);
-}
-
-/* SmartNR ロゴ - ネオン発光効果 */
+/* SmartNR ロゴ - ホワイトネオン発光効果 */
 .smartnr-logo-nr {
-  color: var(--smartnr-blue);
+  color: #ffffff;
   text-shadow: 
-    0 0 5px var(--smartnr-blue),
-    0 0 10px var(--smartnr-blue),
-    0 0 15px var(--smartnr-blue),
-    0 0 20px rgba(0, 196, 204, 0.5);
+    0 0 5px rgba(255, 255, 255, 0.6),
+    0 0 10px rgba(255, 255, 255, 0.4),
+    0 0 15px rgba(255, 255, 255, 0.2);
   animation: neon-pulse 2s ease-in-out infinite alternate;
 }
 
 @keyframes neon-pulse {
   from {
     text-shadow: 
-      0 0 5px var(--smartnr-blue),
-      0 0 10px var(--smartnr-blue),
-      0 0 15px var(--smartnr-blue),
-      0 0 20px rgba(0, 196, 204, 0.5);
+      0 0 5px rgba(255, 255, 255, 0.6),
+      0 0 10px rgba(255, 255, 255, 0.4),
+      0 0 15px rgba(255, 255, 255, 0.2);
   }
   to {
     text-shadow: 
-      0 0 10px var(--smartnr-blue),
-      0 0 20px var(--smartnr-blue),
-      0 0 30px var(--smartnr-blue),
-      0 0 40px rgba(0, 196, 204, 0.8);
+      0 0 10px rgba(255, 255, 255, 0.8),
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 30px rgba(255, 255, 255, 0.4);
   }
 }
 

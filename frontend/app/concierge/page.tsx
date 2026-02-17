@@ -239,7 +239,7 @@ export default function ConciergePage() {
         {/* 戻るリンク */}
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-slate-400 transition-colors hover:text-slate-200"
+          className="inline-flex items-center gap-2 text-zinc-400 transition-colors hover:text-zinc-200"
         >
           <ArrowLeft className="h-4 w-4" />
           <span className="text-sm">ダッシュボードに戻る</span>
@@ -247,23 +247,23 @@ export default function ConciergePage() {
 
         {/* ヘッダー */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center mb-3 h-12 w-12 rounded-full" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
+          <div className="inline-flex items-center justify-center mb-3 h-12 w-12 rounded-full bg-zinc-600">
             <Sparkles className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold">AI Concierge</h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-zinc-400">
             AIアシスタントがあなたをサポートします
           </p>
         </div>
 
         {/* タブ構成 */}
         <Tabs defaultValue="chat" className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-800/50">
-            <TabsTrigger value="chat" className="data-[state=active]:bg-[#00C4CC] data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
+            <TabsTrigger value="chat" className="data-[state=active]:bg-zinc-600 data-[state=active]:text-white">
               <MessageSquare className="h-4 w-4 mr-2" />
               AIチャット
             </TabsTrigger>
-            <TabsTrigger value="matching" className="data-[state=active]:bg-[#00C4CC] data-[state=active]:text-white">
+            <TabsTrigger value="matching" className="data-[state=active]:bg-zinc-600 data-[state=active]:text-white">
               <Target className="h-4 w-4 mr-2" />
               店舗マッチング
             </TabsTrigger>
@@ -279,7 +279,7 @@ export default function ConciergePage() {
                     key={idx}
                     variant="outline"
                     size="sm"
-                    className="border-slate-700 text-xs"
+                    className="border-zinc-700 text-xs"
                     onClick={() => handleSendMessage(query)}
                   >
                     {query}
@@ -289,7 +289,7 @@ export default function ConciergePage() {
             )}
 
             {/* チャットエリア */}
-            <Card className="flex-1 border-slate-800 bg-slate-900/50 p-4 overflow-hidden">
+            <Card className="flex-1 border-zinc-800 bg-zinc-900/50 p-4 overflow-hidden">
               <ScrollArea className="h-full pr-4" ref={scrollRef}>
                 <div className="space-y-4">
                   {messages.map((message) => (
@@ -303,10 +303,9 @@ export default function ConciergePage() {
                         <AvatarFallback
                           className={
                             message.role === 'assistant'
-                              ? 'text-white'
-                              : 'bg-slate-700'
+                              ? 'bg-zinc-600 text-white'
+                              : 'bg-zinc-700 text-white'
                           }
-                          style={message.role === 'assistant' ? { background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' } : undefined}
                         >
                           {message.role === 'assistant' ? (
                             <Bot className="h-4 w-4" />
@@ -318,10 +317,9 @@ export default function ConciergePage() {
                       <div
                         className={`max-w-[75%] rounded-2xl px-4 py-3 ${
                           message.role === 'user'
-                            ? 'text-white'
-                            : 'bg-slate-800 text-slate-100'
+                            ? 'bg-zinc-600 text-white'
+                            : 'bg-zinc-800 text-zinc-100'
                         }`}
-                        style={message.role === 'user' ? { background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' } : undefined}
                       >
                         <p className="whitespace-pre-wrap text-sm leading-relaxed">
                           {message.content}
@@ -329,8 +327,8 @@ export default function ConciergePage() {
                         <p
                           className={`mt-2 text-xs ${
                             message.role === 'user'
-                              ? 'text-purple-100'
-                              : 'text-slate-400'
+                              ? 'text-zinc-200'
+                              : 'text-zinc-400'
                           }`}
                         >
                           {message.timestamp.toLocaleTimeString('ja-JP', {
@@ -344,14 +342,14 @@ export default function ConciergePage() {
                   {isLoading && (
                     <div className="flex gap-3">
                       <Avatar className="h-8 w-8 flex-shrink-0">
-                        <AvatarFallback className="text-white" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
+                        <AvatarFallback className="bg-zinc-600 text-white">
                           <Bot className="h-4 w-4" />
                         </AvatarFallback>
                       </Avatar>
-                      <div className="rounded-2xl bg-slate-800 px-4 py-3">
+                      <div className="rounded-2xl bg-zinc-800 px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" style={{ color: '#00C4CC' }} />
-                          <span className="text-sm text-slate-400">入力中...</span>
+                          <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+                          <span className="text-sm text-zinc-400">入力中...</span>
                         </div>
                       </div>
                     </div>
@@ -361,7 +359,7 @@ export default function ConciergePage() {
             </Card>
 
             {/* 入力エリア */}
-            <Card className="border-slate-800 bg-slate-900/50 p-4">
+            <Card className="border-zinc-800 bg-zinc-900/50 p-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -374,18 +372,17 @@ export default function ConciergePage() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
-                  className="flex-1 bg-slate-800"
+                  className="flex-1 bg-zinc-800"
                 />
                 <Button
                   type="submit"
                   disabled={isLoading || !input.trim()}
-                  className="text-white transition-all h-12 w-12"
-                  style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}
+                  className="bg-zinc-600 text-white hover:bg-zinc-500 transition-all h-12 w-12"
                 >
                   <Send className="h-5 w-5" />
                 </Button>
               </form>
-              <p className="mt-2 text-xs text-center text-slate-500">
+              <p className="mt-2 text-xs text-center text-zinc-500">
                 AIによる自動応答です。重要な決定は人間が確認してください。
               </p>
             </Card>
@@ -395,16 +392,16 @@ export default function ConciergePage() {
           <TabsContent value="matching" className="flex-1 flex flex-col space-y-4 mt-4">
             {!matchingResult ? (
               /* Step 1: 入力フォーム */
-              <Card className="border-slate-800 bg-slate-900/50 p-4 md:p-6">
+              <Card className="border-zinc-800 bg-zinc-900/50 p-4 md:p-6">
                 <div className="space-y-6">
                   <div className="text-center mb-4">
                     <h2 className="text-xl font-bold text-white mb-2">🎯 最適な店舗を見つける</h2>
-                    <p className="text-sm text-slate-400">キャスト情報を入力してください</p>
+                    <p className="text-sm text-zinc-400">キャスト情報を入力してください</p>
                   </div>
 
                   {/* 年齢入力 */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">年齢 *</label>
+                    <label className="text-sm font-medium text-zinc-300">年齢 *</label>
                     <Input
                       type="number"
                       min="18"
@@ -412,13 +409,13 @@ export default function ConciergePage() {
                       value={age}
                       onChange={(e) => setAge(e.target.value)}
                       placeholder="例: 22"
-                      className="bg-slate-800 h-12 text-lg"
+                      className="bg-zinc-800 h-12 text-lg"
                     />
                   </div>
 
                   {/* タイプ選択（チェックボックス） */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">タイプ（複数選択可）</label>
+                    <label className="text-sm font-medium text-zinc-300">タイプ（複数選択可）</label>
                     <div className="grid grid-cols-2 gap-2">
                       {LOOK_TYPES.map((type) => (
                         <button
@@ -427,8 +424,8 @@ export default function ConciergePage() {
                           onClick={() => toggleLookType(type)}
                           className={`h-12 rounded-lg border-2 transition-all ${
                             selectedLookTypes.includes(type)
-                              ? 'border-[#00C4CC] bg-[#00C4CC]/20 text-white'
-                              : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600'
+                              ? 'border-zinc-500 bg-zinc-600/50 text-white'
+                              : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-600'
                           }`}
                         >
                           {type}
@@ -439,12 +436,12 @@ export default function ConciergePage() {
 
                   {/* 経験 */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">経験</label>
+                    <label className="text-sm font-medium text-zinc-300">経験</label>
                     <Select value={experience} onValueChange={setExperience}>
-                      <SelectTrigger className="bg-slate-800 h-12">
+                      <SelectTrigger className="bg-zinc-800 h-12">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-zinc-800 border-zinc-700">
                         {EXPERIENCE_OPTIONS.map(exp => (
                           <SelectItem key={exp} value={exp}>{exp}</SelectItem>
                         ))}
@@ -454,12 +451,12 @@ export default function ConciergePage() {
 
                   {/* 重視項目 */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">重視項目</label>
+                    <label className="text-sm font-medium text-zinc-300">重視項目</label>
                     <Select value={priority} onValueChange={setPriority}>
-                      <SelectTrigger className="bg-slate-800 h-12">
+                      <SelectTrigger className="bg-zinc-800 h-12">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-zinc-800 border-zinc-700">
                         {PRIORITY_OPTIONS.map(pri => (
                           <SelectItem key={pri} value={pri}>{pri}</SelectItem>
                         ))}
@@ -469,12 +466,12 @@ export default function ConciergePage() {
 
                   {/* エリア */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">希望エリア</label>
+                    <label className="text-sm font-medium text-zinc-300">希望エリア</label>
                     <Select value={area} onValueChange={setArea}>
-                      <SelectTrigger className="bg-slate-800 h-12">
+                      <SelectTrigger className="bg-zinc-800 h-12">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-zinc-800 border-zinc-700">
                         {AREA_OPTIONS.map(a => (
                           <SelectItem key={a} value={a}>{a}</SelectItem>
                         ))}
@@ -484,12 +481,12 @@ export default function ConciergePage() {
 
                   {/* 性格メモ */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">性格・特徴（任意）</label>
+                    <label className="text-sm font-medium text-zinc-300">性格・特徴（任意）</label>
                     <Input
                       value={personality}
                       onChange={(e) => setPersonality(e.target.value)}
                       placeholder="例: おっとり、明るい、人見知り..."
-                      className="bg-slate-800 h-12"
+                      className="bg-zinc-800 h-12"
                     />
                   </div>
 
@@ -497,8 +494,7 @@ export default function ConciergePage() {
                   <Button
                     onClick={handleAIMatching}
                     disabled={isMatching || !age}
-                    className="w-full h-14 text-white text-base font-bold"
-                    style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}
+                    className="w-full h-14 bg-zinc-600 hover:bg-zinc-500 text-white text-base font-bold"
                   >
                     {isMatching ? (
                       <div className="flex items-center gap-2">
@@ -516,16 +512,13 @@ export default function ConciergePage() {
                   {/* プログレスバー */}
                   {isMatching && progress > 0 && (
                     <div className="space-y-2">
-                      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full transition-all duration-300"
-                          style={{
-                            width: `${progress}%`,
-                            background: 'linear-gradient(90deg, #00C4CC 0%, #33D4DB 100%)'
-                          }}
+                          className="h-full bg-zinc-500 transition-all duration-300"
+                          style={{ width: `${progress}%` }}
                         />
                       </div>
-                      <p className="text-xs text-center text-slate-400">
+                      <p className="text-xs text-center text-zinc-400">
                         🤖 AI分析中...最適な店舗を探しています
                       </p>
                     </div>
@@ -537,14 +530,14 @@ export default function ConciergePage() {
               <div className="flex-1 flex flex-col space-y-4">
                 {/* AI総評 */}
                 {matchingResult.ai_summary && (
-                  <Card className="border-slate-800 bg-slate-900/50 p-4">
+                  <Card className="border-zinc-800 bg-zinc-900/50 p-4">
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}>
+                      <div className="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center bg-zinc-600">
                         <Sparkles className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-white mb-2">AI総評</h3>
-                        <p className="text-sm text-slate-300 leading-relaxed">
+                        <p className="text-sm text-zinc-300 leading-relaxed">
                           {matchingResult.ai_summary}
                         </p>
                       </div>
@@ -554,8 +547,8 @@ export default function ConciergePage() {
 
                 {/* 警告メッセージ */}
                 {matchingResult.warning && (
-                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                    <p className="text-sm text-yellow-400">⚠️ {matchingResult.warning}</p>
+                  <div className="bg-zinc-700/50 border border-zinc-600 rounded-lg p-3">
+                    <p className="text-sm text-zinc-300">⚠️ {matchingResult.warning}</p>
                   </div>
                 )}
 
@@ -563,18 +556,18 @@ export default function ConciergePage() {
                 <ScrollArea className="flex-1">
                   <div className="space-y-4 pb-4">
                     {matchingResult.recommendations.map((shop, index) => (
-                      <Card key={shop.shop_id} className="border-slate-800 bg-slate-900/50 p-4">
+                      <Card key={shop.shop_id} className="border-zinc-800 bg-zinc-900/50 p-4">
                         <div className="space-y-3">
                           {/* ヘッダー */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <Badge className="bg-[#00C4CC] text-white px-2 py-1">
+                              <Badge className="bg-zinc-600 text-white px-2 py-1">
                                 #{index + 1}
                               </Badge>
                               <h3 className="font-bold text-white text-lg">{shop.shop_name}</h3>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                              <Star className="h-4 w-4 text-zinc-400 fill-zinc-400" />
                               <span className="font-bold text-white">{shop.match_score}</span>
                             </div>
                           </div>
@@ -582,56 +575,53 @@ export default function ConciergePage() {
                           {/* マッチ度バー */}
                           <div className="space-y-1">
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-slate-400">マッチング度</span>
-                              <span className="text-xs font-bold" style={{ color: '#00C4CC' }}>
+                              <span className="text-xs text-zinc-400">マッチング度</span>
+                              <span className="text-xs font-bold text-zinc-300">
                                 {shop.match_score}%
                               </span>
                             </div>
-                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                               <div
-                                className="h-full transition-all duration-500"
-                                style={{
-                                  width: `${shop.match_score}%`,
-                                  background: 'linear-gradient(90deg, #00C4CC 0%, #33D4DB 100%)'
-                                }}
+                                className="h-full bg-zinc-500 transition-all duration-500"
+                                style={{ width: `${shop.match_score}%` }}
                               />
                             </div>
                           </div>
 
                           {/* 店舗情報 */}
                           <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div className="flex items-center gap-2 text-slate-300">
-                              <DollarSign className="h-4 w-4 text-green-400" />
+                            <div className="flex items-center gap-2 text-zinc-300">
+                              <DollarSign className="h-4 w-4 text-zinc-400" />
                               <span>
                                 {shop.hourly_wage_min && shop.hourly_wage_max
                                   ? `¥${shop.hourly_wage_min.toLocaleString()}-${shop.hourly_wage_max.toLocaleString()}`
                                   : '要相談'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 text-slate-300">
-                              <TrendingUp className="h-4 w-4 text-[#00C4CC]" />
+                            <div className="flex items-center gap-2 text-zinc-300">
+                              <TrendingUp className="h-4 w-4 text-zinc-400" />
                               <span>バック {shop.sb_rate}%</span>
                             </div>
                           </div>
 
                           {/* AIコメント */}
-                          <div className="bg-slate-800/50 rounded-lg p-3">
-                            <p className="text-sm text-slate-300 leading-relaxed">
+                          <div className="bg-zinc-800/50 rounded-lg p-3">
+                            <p className="text-sm text-zinc-300 leading-relaxed">
                               💡 {shop.ai_reason}
                             </p>
                           </div>
 
                           {/* 店長情報 */}
                           {(shop.manager_name || shop.manager_tip) && (
-                            <div className="border-t border-slate-800 pt-3 space-y-2">
+                            <div className="border-t border-zinc-800 pt-3 space-y-2">
                               {shop.manager_name && (
-                                <p className="text-xs text-slate-400">
-                                  👤 店長: <span className="text-slate-300">{shop.manager_name}</span>
+                                <p className="text-xs text-zinc-400">
+                                  👤 店長: <span className="text-zinc-300">{shop.manager_name}</span>
                                 </p>
                               )}
                               {shop.manager_tip && (
-                                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2">
-                                  <p className="text-xs text-blue-300">
+                                <div className="bg-zinc-700/50 border border-zinc-600 rounded-lg p-2">
+                                  <p className="text-xs text-zinc-300">
                                     💬 {shop.manager_tip}
                                   </p>
                                 </div>
@@ -649,20 +639,19 @@ export default function ConciergePage() {
                               paymentCycle: 'monthly',
                             });
                             return (
-                              <div className="border-t border-slate-800 pt-3">
-                                <p className="text-xs font-medium text-slate-400 mb-2">💰 推定報酬</p>
-                                <div className="bg-gradient-to-r from-[#00C4CC]/10 to-[#33D4DB]/5 border border-[#00C4CC]/20 rounded-lg p-3">
+                              <div className="border-t border-zinc-800 pt-3">
+                                <p className="text-xs font-medium text-zinc-400 mb-2">💰 推定報酬</p>
+                                <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-3">
                                   <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs text-slate-400">SB率 {shop.sb_rate}% / 売上50万 / 取分70%</span>
+                                    <span className="text-xs text-zinc-400">SB率 {shop.sb_rate}% / 売上50万 / 取分70%</span>
                                   </div>
                                   <div className="flex items-center justify-between">
-                                    <span className="text-lg font-bold" style={{ color: '#00C4CC' }}>
-                                      {formatCurrency(commission.scoutIncome)}<span className="text-xs text-slate-400 font-normal">/月</span>
+                                    <span className="text-lg font-bold text-zinc-200">
+                                      {formatCurrency(commission.scoutIncome)}<span className="text-xs text-zinc-400 font-normal">/月</span>
                                     </span>
                                     <Link
                                       href={`/commission?shop_id=${shop.shop_id}`}
-                                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors"
-                                      style={{ background: 'rgba(0, 196, 204, 0.15)', color: '#00C4CC' }}
+                                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors bg-zinc-700 text-zinc-200 hover:bg-zinc-600"
                                     >
                                       📊 詳しく計算
                                     </Link>
@@ -676,8 +665,8 @@ export default function ConciergePage() {
                     ))}
 
                     {matchingResult.recommendations.length === 0 && (
-                      <Card className="border-slate-800 bg-slate-900/50 p-8">
-                        <div className="text-center text-slate-400">
+                      <Card className="border-zinc-800 bg-zinc-900/50 p-8">
+                        <div className="text-center text-zinc-400">
                           <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
                           <p>条件に合う店舗が見つかりませんでした。</p>
                           <p className="text-sm mt-2">条件を変えて再検索してください。</p>
@@ -691,7 +680,7 @@ export default function ConciergePage() {
                 <Button
                   onClick={resetMatchingForm}
                   variant="outline"
-                  className="w-full h-12 border-slate-700 text-slate-300 hover:bg-slate-800"
+                  className="w-full h-12 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   条件を変えて再検索

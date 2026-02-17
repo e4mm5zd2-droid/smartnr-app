@@ -66,7 +66,6 @@ export default function NewCastPage() {
     e.preventDefault();
     setError(null);
     
-    // バリデーション
     if (!formData.genji_name.trim()) {
       setError("源氏名を入力してください");
       return;
@@ -83,7 +82,6 @@ export default function NewCastPage() {
     setIsSubmitting(true);
 
     try {
-      // キャストカテゴリの自動判定
       let cast_category: 'new' | 'experience' | 'active' | 'returner' = 'new';
       if (formData.current_shop && formData.availability === '稼働中') {
         cast_category = 'active';
@@ -102,13 +100,12 @@ export default function NewCastPage() {
         notes: formData.notes || undefined,
         current_shop: formData.current_shop || undefined,
         cast_category,
-        status: 'pending', // デフォルトで審査中
+        status: 'pending',
       };
 
       await createCast(castData);
       setSuccess(true);
       
-      // 2秒後に一覧ページへ
       setTimeout(() => {
         router.push('/casts');
       }, 2000);
@@ -122,13 +119,13 @@ export default function NewCastPage() {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="border-slate-800 bg-slate-900/50 p-8 text-center max-w-md w-full">
-          <CheckCircle2 className="h-16 w-16 mx-auto mb-4" style={{ color: '#00C4CC' }} />
+        <Card className="bg-zinc-900 p-8 text-center max-w-md w-full rounded-2xl">
+          <CheckCircle2 className="h-16 w-16 mx-auto mb-4 text-white" />
           <h2 className="text-2xl font-bold text-white mb-2">登録完了</h2>
-          <p className="text-slate-400 mb-4">
+          <p className="text-zinc-400 mb-4">
             キャスト「{formData.genji_name}」を登録しました
           </p>
-          <p className="text-sm text-slate-500">一覧ページに移動します...</p>
+          <p className="text-sm text-zinc-500">一覧ページに移動します...</p>
         </Card>
       </div>
     );
@@ -139,27 +136,26 @@ export default function NewCastPage() {
       {/* ヘッダー */}
       <div className="flex items-center gap-3">
         <Link href="/casts">
-          <Button variant="ghost" size="icon" className="text-slate-400">
+          <Button variant="ghost" size="icon" className="text-zinc-400">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-white">新規キャスト登録</h1>
-          <p className="text-sm text-slate-400">基本情報を入力してください</p>
+          <p className="text-sm text-zinc-400">基本情報を入力してください</p>
         </div>
       </div>
 
       {/* エラー表示 */}
       {error && (
-        <Card className="border-red-500/50 bg-red-500/10 p-4">
+        <Card className="border-red-500/50 bg-red-500/10 p-4 rounded-xl">
           <p className="text-red-400 text-sm">{error}</p>
         </Card>
       )}
 
       {/* フォーム */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 源氏名（必須） */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             源氏名 <span className="text-red-400">*</span>
           </label>
@@ -167,13 +163,12 @@ export default function NewCastPage() {
             value={formData.genji_name}
             onChange={(e) => setFormData({ ...formData, genji_name: e.target.value })}
             placeholder="例: まり"
-            className="bg-slate-800 border-slate-700"
+            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
 
-        {/* 年齢（必須） */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             年齢 <span className="text-red-400">*</span>
           </label>
@@ -184,13 +179,12 @@ export default function NewCastPage() {
             placeholder="例: 21"
             min="18"
             max="50"
-            className="bg-slate-800 border-slate-700"
+            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
 
-        {/* 電話番号（必須） */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             電話番号 <span className="text-red-400">*</span>
           </label>
@@ -199,13 +193,12 @@ export default function NewCastPage() {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="例: 090-1234-5678"
-            className="bg-slate-800 border-slate-700"
+            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
 
-        {/* LINE ID（任意） */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             LINE ID
           </label>
@@ -213,12 +206,11 @@ export default function NewCastPage() {
             value={formData.line_id}
             onChange={(e) => setFormData({ ...formData, line_id: e.target.value })}
             placeholder="例: mari_kyoto"
-            className="bg-slate-800 border-slate-700"
+            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
           />
         </Card>
 
-        {/* ルックス系統タグ */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-3">
             ルックス系統
           </label>
@@ -230,8 +222,8 @@ export default function NewCastPage() {
                 onClick={() => handleLooksTagToggle(tag)}
                 className={`cursor-pointer transition-colors ${
                   formData.looks_tags.includes(tag)
-                    ? 'bg-[#00C4CC]/20 text-[#00C4CC] border-[#00C4CC]'
-                    : 'border-slate-700 bg-slate-800/50 text-slate-400 hover:border-slate-600'
+                    ? 'bg-white text-zinc-950 border-white'
+                    : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-600'
                 }`}
               >
                 {tag}
@@ -240,8 +232,7 @@ export default function NewCastPage() {
           </div>
         </Card>
 
-        {/* 経験 */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             経験
           </label>
@@ -249,7 +240,7 @@ export default function NewCastPage() {
             value={formData.experience}
             onValueChange={(value) => setFormData({ ...formData, experience: value })}
           >
-            <SelectTrigger className="bg-slate-800 border-slate-700">
+            <SelectTrigger className="bg-zinc-800 border-none rounded-lg">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -261,8 +252,7 @@ export default function NewCastPage() {
           </Select>
         </Card>
 
-        {/* 希望エリア */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             希望エリア
           </label>
@@ -270,7 +260,7 @@ export default function NewCastPage() {
             value={formData.preferred_area}
             onValueChange={(value) => setFormData({ ...formData, preferred_area: value })}
           >
-            <SelectTrigger className="bg-slate-800 border-slate-700">
+            <SelectTrigger className="bg-zinc-800 border-none rounded-lg">
               <SelectValue placeholder="エリアを選択" />
             </SelectTrigger>
             <SelectContent>
@@ -283,8 +273,7 @@ export default function NewCastPage() {
           </Select>
         </Card>
 
-        {/* 現在の稼働店舗 */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             現在の稼働店舗
           </label>
@@ -292,12 +281,11 @@ export default function NewCastPage() {
             value={formData.current_shop}
             onChange={(e) => setFormData({ ...formData, current_shop: e.target.value })}
             placeholder="例: Club LION（稼働中の場合）"
-            className="bg-slate-800 border-slate-700"
+            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
           />
         </Card>
 
-        {/* メモ */}
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
+        <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
             メモ
           </label>
@@ -305,20 +293,15 @@ export default function NewCastPage() {
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             placeholder="その他の情報があれば記入してください"
-            className="bg-slate-800 border-slate-700 min-h-[100px]"
+            className="bg-zinc-800 border-none rounded-lg min-h-[100px] focus:ring-1 focus:ring-zinc-600"
           />
         </Card>
 
-        {/* 保存ボタン（X風） */}
+        {/* 保存ボタン */}
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 text-white font-semibold transition-all"
-          style={{
-            background: isSubmitting
-              ? 'linear-gradient(135deg, #00A3AA 0%, #008B91 100%)'
-              : 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)',
-          }}
+          className="w-full h-12 bg-white text-zinc-950 hover:bg-zinc-200 font-semibold rounded-xl transition-all"
         >
           {isSubmitting ? (
             <>

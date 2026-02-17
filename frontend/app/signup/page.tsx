@@ -106,17 +106,17 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-        <Card className="w-full max-w-md border-slate-800 bg-slate-900/50 p-8 backdrop-blur-sm text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(0, 196, 204, 0.2)' }}>
-            <CheckCircle2 className="h-8 w-8" style={{ color: '#00C4CC' }} />
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
+        <Card className="w-full max-w-md border-0 bg-zinc-900/50 p-8 backdrop-blur-sm text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800">
+            <CheckCircle2 className="h-8 w-8 text-zinc-400" />
           </div>
           <h2 className="text-2xl font-bold mb-2">登録完了！</h2>
-          <p className="text-slate-400 mb-6">
+          <p className="text-zinc-400 mb-6">
             確認メールを送信しました。<br />
             メール内のリンクをクリックして認証を完了してください。
           </p>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-zinc-500">
             3秒後にログインページへ移動します...
           </p>
         </Card>
@@ -125,12 +125,12 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
       <div className="w-full max-w-md space-y-8">
         {/* ロゴ・ヘッダー */}
         <div className="text-center">
           <Link href="/login">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg cursor-pointer hover:scale-105 transition-transform" style={{ backgroundColor: '#00C4CC' }}>
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg cursor-pointer hover:scale-105 transition-transform bg-zinc-600">
               <span className="text-3xl font-bold text-white">SN</span>
             </div>
           </Link>
@@ -138,16 +138,16 @@ export default function SignupPage() {
             <span className="text-white">Smart</span>
             <span className="smartnr-logo-nr text-4xl">NR</span>
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-zinc-400">
             アカウント新規登録
           </p>
         </div>
 
         {/* 登録フォーム */}
-        <Card className="border-slate-800 bg-slate-900/50 p-8 backdrop-blur-sm">
+        <Card className="border-0 bg-zinc-900/50 p-8 backdrop-blur-sm">
           <form onSubmit={handleSignup} className="space-y-6">
             {error && (
-              <div className="flex items-start gap-2 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+              <div className="flex items-start gap-2 rounded-lg bg-zinc-800 border border-zinc-600 p-3 text-sm text-zinc-300">
                 <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <span>{error}</span>
               </div>
@@ -159,7 +159,7 @@ export default function SignupPage() {
                   お名前
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="name"
                     type="text"
@@ -168,7 +168,7 @@ export default function SignupPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="bg-slate-800 pl-10"
+                    className="bg-zinc-800 pl-10"
                     required
                   />
                 </div>
@@ -179,7 +179,7 @@ export default function SignupPage() {
                   メールアドレス
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="email"
                     type="email"
@@ -188,7 +188,7 @@ export default function SignupPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="bg-slate-800 pl-10"
+                    className="bg-zinc-800 pl-10"
                     required
                   />
                 </div>
@@ -199,7 +199,7 @@ export default function SignupPage() {
                   パスワード
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -208,13 +208,13 @@ export default function SignupPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="bg-slate-800 pl-10 pr-10"
+                    className="bg-zinc-800 pl-10 pr-10"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-300"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -223,7 +223,7 @@ export default function SignupPage() {
                     )}
                   </button>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-zinc-500">
                   ※ 8文字以上、大文字・数字を含む必要があります
                 </p>
               </div>
@@ -233,7 +233,7 @@ export default function SignupPage() {
                   パスワード（確認）
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -242,13 +242,13 @@ export default function SignupPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, confirmPassword: e.target.value })
                     }
-                    className="bg-slate-800 pl-10 pr-10"
+                    className="bg-zinc-800 pl-10 pr-10"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-300"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -260,17 +260,16 @@ export default function SignupPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-2 text-xs text-slate-400">
+            <div className="flex items-start gap-2 text-xs text-zinc-400">
               <input
                 type="checkbox"
-                className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-slate-800 focus:ring-offset-0"
-                style={{ accentColor: '#00C4CC' }}
+                className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 focus:ring-offset-0 accent-zinc-500"
                 required
               />
               <span>
-                <a href="#" className="hover:underline" style={{ color: '#00C4CC' }}>利用規約</a>
+                <a href="#" className="hover:underline text-zinc-300">利用規約</a>
                 および
-                <a href="#" className="hover:underline" style={{ color: '#00C4CC' }}>プライバシーポリシー</a>
+                <a href="#" className="hover:underline text-zinc-300">プライバシーポリシー</a>
                 に同意します
               </span>
             </div>
@@ -278,10 +277,7 @@ export default function SignupPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full text-white transition-all"
-              style={{ backgroundColor: '#00C4CC' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#00A3AA')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#00C4CC')}
+              className="w-full text-white bg-zinc-600 hover:bg-zinc-500 transition-all"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -300,10 +296,10 @@ export default function SignupPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <Separator className="bg-slate-800" />
+                <Separator className="bg-zinc-800" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-slate-900 px-2 text-slate-400">
+                <span className="bg-zinc-900 px-2 text-zinc-400">
                   または
                 </span>
               </div>
@@ -313,7 +309,7 @@ export default function SignupPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full border-slate-700"
+                className="w-full border-zinc-700"
                 onClick={() => alert('Google連携は実装予定です')}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -341,12 +337,11 @@ export default function SignupPage() {
         </Card>
 
         {/* フッター */}
-        <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-zinc-400">
           すでにアカウントをお持ちの方は{' '}
           <Link
             href="/login"
-            className="hover:underline"
-            style={{ color: '#00C4CC' }}
+            className="hover:underline text-zinc-300"
           >
             ログイン
           </Link>

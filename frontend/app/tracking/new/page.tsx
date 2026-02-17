@@ -121,20 +121,18 @@ function NewLinkContent() {
       {!generated ? (
         <>
           {/* リンクタイプ選択 */}
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">リンクタイプ</h3>
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant={linkType === 'recruit' ? 'default' : 'outline'}
                 onClick={() => setLinkType('recruit')}
-                className={linkType === 'recruit' ? 'bg-[#00C4CC]' : ''}
               >
                 🌙 キャスト募集
               </Button>
               <Button
                 variant={linkType === 'app_invite' ? 'default' : 'outline'}
                 onClick={() => setLinkType('app_invite')}
-                style={linkType === 'app_invite' ? { backgroundColor: '#FF69B4' } : undefined}
               >
                 💎 アプリ紹介
               </Button>
@@ -143,11 +141,11 @@ function NewLinkContent() {
 
           {/* キャスト募集設定 */}
           {linkType === 'recruit' && (
-            <Card className="border-slate-700 bg-slate-900/50 p-6">
+            <Card className="border-0 bg-zinc-900/50 p-6">
               <h3 className="text-lg font-bold text-white mb-4">キャスト募集設定</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">紹介先店舗（オプション）</label>
+                  <label className="text-sm text-zinc-400 mb-2 block">紹介先店舗（オプション）</label>
                   <Select value={shopId} onValueChange={setShopId}>
                     <SelectTrigger>
                       <SelectValue placeholder="選択しない" />
@@ -164,7 +162,7 @@ function NewLinkContent() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">LPの見出し（オプション）</label>
+                  <label className="text-sm text-zinc-400 mb-2 block">LPの見出し（オプション）</label>
                   <Input
                     placeholder="例: ナイトワーク始めませんか？"
                     value={headline}
@@ -173,7 +171,7 @@ function NewLinkContent() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">LPテンプレート</label>
+                  <label className="text-sm text-zinc-400 mb-2 block">LPテンプレート</label>
                   <div className="grid grid-cols-3 gap-2">
                     <Button
                       variant={template === 'default' ? 'default' : 'outline'}
@@ -204,9 +202,9 @@ function NewLinkContent() {
 
           {/* アプリ紹介設定 */}
           {linkType === 'app_invite' && (
-            <Card className="border-slate-700 bg-slate-900/50 p-6">
+            <Card className="border-0 bg-zinc-900/50 p-6">
               <h3 className="text-lg font-bold text-white mb-4">アプリ紹介設定</h3>
-              <p className="text-slate-400 text-sm">追加設定なし。すぐに発行できます。</p>
+              <p className="text-zinc-400 text-sm">追加設定なし。すぐに発行できます。</p>
             </Card>
           )}
 
@@ -218,10 +216,10 @@ function NewLinkContent() {
       ) : (
         <>
           {/* 発行結果 */}
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">📋 短縮URL</h3>
             <div className="flex items-center gap-2">
-              <div className="flex-1 p-3 rounded bg-slate-800 text-white font-mono text-sm break-all">
+              <div className="flex-1 p-3 rounded bg-zinc-800 text-white font-mono text-sm break-all">
                 {generatedLink?.url}
               </div>
               <Button onClick={handleCopy}>
@@ -231,7 +229,7 @@ function NewLinkContent() {
             </div>
           </Card>
 
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">📱 QRコード</h3>
             <div className="flex flex-col items-center gap-4">
               {generatedLink?.qr_code && (
@@ -252,9 +250,9 @@ function NewLinkContent() {
             </div>
           </Card>
 
-          <Card className="border-slate-700 bg-slate-900/50 p-6">
+          <Card className="border-0 bg-zinc-900/50 p-6">
             <h3 className="text-lg font-bold text-white mb-4">💡 使い方</h3>
-            <ul className="space-y-2 text-slate-300 text-sm">
+            <ul className="space-y-2 text-zinc-300 text-sm">
               <li>・LINEにURLを貼って送信</li>
               <li>・対面でQRコードを見せる</li>
               <li>・名刺にQRを印刷</li>
@@ -278,7 +276,7 @@ function NewLinkContent() {
 
 export default function NewLinkPage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p className="text-slate-400">読み込み中...</p></div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p className="text-zinc-400">読み込み中...</p></div>}>
       <NewLinkContent />
     </Suspense>
   );

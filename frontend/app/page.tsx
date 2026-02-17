@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Users, Store, ArrowRight, Calculator, Sparkles, Calendar, MessageSquare, Heart, Repeat2 } from 'lucide-react';
+import { UserPlus, Users, Store, Sparkles, MessageSquare, Heart } from 'lucide-react';
 
 // キャンペーン掲示板のモックデータ（将来的にSupabaseのcampaignsテーブルから取得）
 const campaigns = [
@@ -56,37 +56,37 @@ const campaigns = [
 ];
 
 export default function Home() {
+  const displayedCampaigns = campaigns.slice(0, 2);
+  const hasMore = campaigns.length > 2;
+
   return (
     <div className="space-y-6 p-4">
-      {/* キャンペーン掲示板（Xタイムライン風） */}
+      {/* お知らせ（上部に配置） */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white">お知らせ</h2>
-          <Badge variant="outline" className="border-[#00C4CC]/30 bg-[#00C4CC]/10 text-[#00C4CC]">
+          <Badge variant="outline" className="border-zinc-700 bg-zinc-800/50 text-zinc-400 text-xs">
             {campaigns.length}件
           </Badge>
         </div>
         
         <div className="space-y-3">
-          {campaigns.map((campaign) => (
+          {displayedCampaigns.map((campaign) => (
             <Card
               key={campaign.id}
-              className="border-slate-800 bg-slate-900/50 p-4 hover:bg-slate-800/50 transition-colors cursor-pointer"
+              className="bg-zinc-900 p-5 hover:bg-zinc-800 transition-colors cursor-pointer rounded-xl"
             >
               <div className="flex gap-3">
                 {/* アバター */}
-                <div
-                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
-                  style={{ background: 'linear-gradient(135deg, #00C4CC 0%, #33D4DB 100%)' }}
-                >
-                  <Sparkles className="h-5 w-5 text-white" />
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold">
+                  <Sparkles className="h-5 w-5 text-zinc-950" />
                 </div>
 
                 {/* 本文 */}
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-white">SmartNR 公式</span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-zinc-500">
                       {new Date(campaign.date).toLocaleDateString('ja-JP', {
                         month: 'short',
                         day: 'numeric',
@@ -95,17 +95,14 @@ export default function Home() {
                   </div>
                   
                   <h3 className="font-bold text-white">{campaign.title}</h3>
-                  <p className="text-sm text-slate-300 leading-relaxed">{campaign.body}</p>
+                  <p className="text-sm text-zinc-300 leading-relaxed">{campaign.body}</p>
                   
                   <div className="flex items-center gap-4 pt-2">
-                    <Badge
-                      variant="outline"
-                      className="border-slate-700 bg-slate-800/50 text-slate-300 text-xs"
-                    >
+                    <Badge variant="outline" className="bg-zinc-800 text-zinc-400 text-xs">
                       {campaign.tag}
                     </Badge>
                     
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                    <div className="flex items-center gap-4 text-xs text-zinc-500">
                       <button className="flex items-center gap-1 hover:text-red-400 transition-colors">
                         <Heart className="h-3.5 w-3.5" />
                         <span>{campaign.likes}</span>
@@ -121,57 +118,48 @@ export default function Home() {
             </Card>
           ))}
         </div>
+
+        {/* すべて見るリンク */}
+        {hasMore && (
+          <button className="w-full text-center text-sm text-zinc-400 hover:text-white transition-colors py-2">
+            すべて見る →
+          </button>
+        )}
       </div>
 
-      {/* クイックアクション */}
-      <div>
-        <h2 className="text-xl font-bold text-white mb-4">クイックアクション</h2>
+      {/* クイックアクション（下部に配置） */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-white">クイックアクション</h2>
         <div className="grid grid-cols-2 gap-3">
           <Link href="/casts/new">
-            <Card
-              className="group border-slate-800 p-4 transition-all cursor-pointer h-full"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 196, 204, 0.1) 0%, rgba(0, 196, 204, 0.05) 100%)',
-              }}
-            >
-              <UserPlus className="h-7 w-7 mb-2" style={{ color: '#00C4CC' }} />
+            <Card className="bg-zinc-900 p-5 transition-all hover:bg-zinc-800 cursor-pointer h-full rounded-xl">
+              <UserPlus className="h-7 w-7 text-white mb-2" />
               <h3 className="font-semibold text-white">新規登録</h3>
-              <p className="text-xs text-slate-400 mt-1">キャスト情報登録</p>
+              <p className="text-xs text-zinc-400 mt-1">キャスト情報登録</p>
             </Card>
           </Link>
 
           <Link href="/casts">
-            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full">
-              <Users className="h-7 w-7 text-slate-400 mb-2" />
+            <Card className="bg-zinc-900 p-5 transition-all hover:bg-zinc-800 cursor-pointer h-full rounded-xl">
+              <Users className="h-7 w-7 text-zinc-400 mb-2" />
               <h3 className="font-semibold text-white">キャスト</h3>
-              <p className="text-xs text-slate-400 mt-1">一覧・検索</p>
+              <p className="text-xs text-zinc-400 mt-1">一覧・検索</p>
             </Card>
           </Link>
 
           <Link href="/stores">
-            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full">
-              <Store className="h-7 w-7 text-slate-400 mb-2" />
+            <Card className="bg-zinc-900 p-5 transition-all hover:bg-zinc-800 cursor-pointer h-full rounded-xl">
+              <Store className="h-7 w-7 text-zinc-400 mb-2" />
               <h3 className="font-semibold text-white">店舗</h3>
-              <p className="text-xs text-slate-400 mt-1">管理・詳細</p>
+              <p className="text-xs text-zinc-400 mt-1">管理・詳細</p>
             </Card>
           </Link>
 
-          <Link href="/commission">
-            <Card className="group border-slate-800 bg-slate-900/50 p-4 transition-all hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer h-full relative">
-              <Calculator className="h-7 w-7 text-slate-400 mb-2" />
-              <h3 className="font-semibold text-white">報酬計算</h3>
-              <p className="text-xs text-slate-400 mt-1">シミュレーター</p>
-              <Badge
-                variant="outline"
-                className="absolute top-2 right-2 text-[10px] px-1.5 py-0.5"
-                style={{
-                  borderColor: 'rgba(0, 196, 204, 0.3)',
-                  backgroundColor: 'rgba(0, 196, 204, 0.1)',
-                  color: '#00C4CC',
-                }}
-              >
-                NEW
-              </Badge>
+          <Link href="/concierge">
+            <Card className="bg-zinc-900 p-5 transition-all hover:bg-zinc-800 cursor-pointer h-full rounded-xl">
+              <span className="text-2xl mb-2 block">🤖</span>
+              <h3 className="font-semibold text-white">AI相談</h3>
+              <p className="text-xs text-zinc-400 mt-1">Concierge</p>
             </Card>
           </Link>
         </div>

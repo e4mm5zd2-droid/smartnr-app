@@ -6,13 +6,11 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import {
   ArrowLeft,
   Phone,
   Mail,
   Calendar,
-  MapPin,
   Edit,
   Trash2,
   Building2,
@@ -50,10 +48,10 @@ export default function CastDetailPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="space-y-4 p-4">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-64 rounded bg-slate-800" />
-          <div className="h-64 rounded bg-slate-800" />
+          <div className="h-8 w-64 rounded bg-zinc-800" />
+          <div className="h-64 rounded bg-zinc-800" />
         </div>
       </div>
     );
@@ -61,11 +59,11 @@ export default function CastDetailPage() {
 
   if (!cast) {
     return (
-      <div className="container mx-auto p-6">
-        <Card className="border-slate-800 bg-slate-900/50 p-12 text-center">
-          <p className="text-slate-400">キャスト情報が見つかりませんでした</p>
+      <div className="space-y-4 p-4">
+        <Card className="bg-zinc-900 p-12 text-center rounded-xl">
+          <p className="text-zinc-400">キャスト情報が見つかりませんでした</p>
           <Link href="/casts">
-            <Button className="mt-4" variant="outline">
+            <Button className="mt-4 bg-white text-zinc-950 hover:bg-zinc-200">
               一覧に戻る
             </Button>
           </Link>
@@ -75,158 +73,120 @@ export default function CastDetailPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-6 p-4">
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link href="/casts">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="text-zinc-400">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-2xl font-bold flex items-center gap-3 text-white">
               {cast.genji_name}
               <CastCategoryBadge category={(cast.cast_category || 'new') as CastCategory} />
             </h1>
-            <p className="mt-1 text-sm text-slate-400">キャスト詳細情報</p>
+            <p className="mt-1 text-sm text-zinc-400">キャスト詳細情報</p>
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="border-slate-700">
-            <Edit className="mr-2 h-4 w-4" />
-            編集
+          <Button variant="ghost" className="bg-zinc-800 text-white hover:bg-zinc-700">
+            <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="outline" className="border-red-500/50 text-red-400 hover:bg-red-500/10">
-            <Trash2 className="mr-2 h-4 w-4" />
-            削除
+          <Button variant="ghost" className="text-red-400 hover:bg-red-500/10">
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* メイン情報 */}
-        <Card className="border-slate-800 bg-slate-900/50 p-6 lg:col-span-2">
-          <div className="flex items-start gap-6">
-            {/* 写真表示削除 → デフォルトアイコン */}
-            <UserCircle2 className="h-24 w-24 flex-shrink-0 text-slate-500" />
-            <div className="flex-1 space-y-4">
-              <div>
-                <h2 className="text-2xl font-bold">{cast.genji_name}</h2>
-                <p className="text-slate-400">
-                  {cast.real_name_initial ? `本名: ${cast.real_name_initial}` : '本名非公開'}
-                </p>
-              </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {cast.looks_tags?.map((tag, idx) => (
-                  <Badge
-                    key={idx}
-                    variant="outline"
-                    className="border-purple-500/30 bg-purple-500/10 text-purple-300"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
+      {/* メイン情報 */}
+      <Card className="bg-zinc-900 p-5 rounded-xl">
+        <div className="flex items-start gap-4">
+          <UserCircle2 className="h-20 w-20 flex-shrink-0 text-zinc-500" />
+          <div className="flex-1 space-y-4">
+            <div>
+              <h2 className="text-xl font-bold text-white">{cast.genji_name}</h2>
+              <p className="text-zinc-400 text-sm">
+                {cast.real_name_initial ? `本名: ${cast.real_name_initial}` : '本名非公開'}
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {cast.looks_tags?.map((tag, idx) => (
+                <Badge
+                  key={idx}
+                  variant="outline"
+                  className="bg-zinc-800 text-zinc-300 border-none text-xs"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
 
-              <Separator className="bg-slate-800" />
-
-              <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar className="h-4 w-4 text-zinc-400" />
+                <span className="text-white">{cast.age}歳</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Phone className="h-4 w-4 text-zinc-400" />
+                <a href={`tel:${cast.phone}`} className="text-white hover:underline">
+                  {cast.phone}
+                </a>
+              </div>
+              {cast.line_id && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-slate-400" />
-                  <span className="text-slate-300">{cast.age}歳</span>
+                  <Mail className="h-4 w-4 text-zinc-400" />
+                  <span className="text-zinc-300">LINE: {cast.line_id}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-slate-400" />
-                  <a href={`tel:${cast.phone}`} className="text-purple-400 hover:underline">
-                    {cast.phone}
-                  </a>
-                </div>
-                {cast.line_id && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-slate-400" />
-                    <span className="text-slate-300">LINE: {cast.line_id}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-slate-400" />
-                  <span className="text-slate-400">
-                    登録日: {new Date(cast.created_at).toLocaleDateString('ja-JP')}
-                  </span>
-                </div>
+              )}
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar className="h-4 w-4 text-zinc-400" />
+                <span className="text-zinc-400">
+                  登録日: {new Date(cast.created_at).toLocaleDateString('ja-JP')}
+                </span>
               </div>
             </div>
           </div>
-        </Card>
+        </div>
+      </Card>
 
-        {/* ステータスカード */}
-        <Card className="border-slate-800 bg-slate-900/50 p-6">
-          <h3 className="mb-4 font-semibold">ステータス</h3>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">現在の状態</span>
-              <Badge
-                variant="outline"
-                className="bg-green-500/10 text-green-400 border-green-500/20"
-              >
-                {cast.status}
-              </Badge>
-            </div>
-            <Separator className="bg-slate-800" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">スカウトID</span>
-              <span className="text-sm font-medium">
-                {cast.scout_id || '-'}
-              </span>
+      {/* 統計 */}
+      <div className="grid gap-3 grid-cols-3">
+        <Card className="bg-zinc-900 p-4 rounded-xl">
+          <div className="flex flex-col items-center gap-2">
+            <Building2 className="h-6 w-6 text-zinc-400" />
+            <div className="text-center">
+              <p className="text-xs text-zinc-500">面接店舗</p>
+              <p className="text-xl font-bold text-white">3</p>
             </div>
           </div>
         </Card>
-      </div>
-
-      {/* アクション統計 */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10">
-              <Building2 className="h-6 w-6 text-purple-400" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">面接店舗数</p>
-              <p className="text-2xl font-bold">3</p>
+        <Card className="bg-zinc-900 p-4 rounded-xl">
+          <div className="flex flex-col items-center gap-2">
+            <DollarSign className="h-6 w-6 text-emerald-400" />
+            <div className="text-center">
+              <p className="text-xs text-zinc-500">総報酬</p>
+              <p className="text-xl font-bold text-white">¥150k</p>
             </div>
           </div>
         </Card>
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10">
-              <DollarSign className="h-6 w-6 text-green-400" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">総報酬額</p>
-              <p className="text-2xl font-bold">¥150,000</p>
-            </div>
-          </div>
-        </Card>
-        <Card className="border-slate-800 bg-slate-900/50 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
-              <TrendingUp className="h-6 w-6 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">成約率</p>
-              <p className="text-2xl font-bold">66%</p>
+        <Card className="bg-zinc-900 p-4 rounded-xl">
+          <div className="flex flex-col items-center gap-2">
+            <TrendingUp className="h-6 w-6 text-blue-400" />
+            <div className="text-center">
+              <p className="text-xs text-zinc-500">成約率</p>
+              <p className="text-xl font-bold text-white">66%</p>
             </div>
           </div>
         </Card>
       </div>
 
       {/* 面接履歴 */}
-      <Card className="border-slate-800 bg-slate-900/50 p-6">
-        <h3 className="mb-4 text-lg font-semibold">面接履歴</h3>
-        <div className="space-y-3">
-          <p className="text-sm text-slate-400">面接履歴がありません</p>
-        </div>
+      <Card className="bg-zinc-900 p-5 rounded-xl">
+        <h3 className="mb-4 text-lg font-semibold text-white">面接履歴</h3>
+        <p className="text-sm text-zinc-400">面接履歴がありません</p>
       </Card>
     </div>
   );

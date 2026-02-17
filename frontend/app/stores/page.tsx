@@ -11,10 +11,8 @@ import {
   Store,
   Search,
   MapPin,
-  DollarSign,
-  Users,
   Eye,
-  ArrowLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -49,143 +47,100 @@ export default function StoresPage() {
   }, [searchQuery, stores]);
 
   const systemTypeConfig: Record<string, { label: string; color: string }> = {
-    キャバクラ: { label: 'キャバクラ', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
-    ガールズバー: { label: 'ガールズバー', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' },
-    ラウンジ: { label: 'ラウンジ', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+    キャバクラ: { label: 'キャバクラ', color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+    ガールズバー: { label: 'ガールズバー', color: 'bg-pink-500/20 text-pink-300 border-pink-500/30' },
+    ラウンジ: { label: 'ラウンジ', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* 戻るリンク */}
-      <Link 
-        href="/" 
-        className="inline-flex items-center gap-2 text-slate-400 transition-colors hover:text-slate-200"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="text-sm">ダッシュボードに戻る</span>
-      </Link>
-
+    <div className="space-y-6 p-4">
       {/* ヘッダー */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">店舗管理</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            提携店舗の一覧と詳細情報
-          </p>
-        </div>
-      </div>
-
-      {/* 統計カード */}
-      <div className="grid gap-4 md:grid-cols-4">
-        {[
-          { label: '総店舗数', value: stores.length, color: 'from-purple-500 to-pink-500', icon: Store },
-          { label: '平均時給', value: stores.length > 0 ? `¥${Math.round(stores.reduce((sum, s) => sum + (s.hourly_wage_min + s.hourly_wage_max) / 2, 0) / stores.length)}` : '-', color: 'from-green-500 to-emerald-500', icon: DollarSign },
-          { label: '京都エリア', value: stores.filter(s => s.area.includes('京都')).length, color: 'from-yellow-500 to-orange-500', icon: MapPin },
-          { label: '登録キャスト', value: 42, color: 'from-blue-500 to-cyan-500', icon: Users },
-        ].map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={idx} className="border-slate-800 bg-slate-900/50 p-4">
-              <div className="flex items-center gap-3">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${stat.color}`}>
-                  <Icon className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400">{stat.label}</p>
-                  <p className="text-2xl font-bold">
-                    {loading ? '---' : stat.value}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+      <div>
+        <h1 className="text-2xl font-bold text-white">店舗管理</h1>
+        <p className="mt-1 text-sm text-zinc-400">
+          提携店舗の一覧と詳細情報
+        </p>
       </div>
 
       {/* 検索 */}
-      <Card className="border-slate-800 bg-slate-900/50 p-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            placeholder="店舗名・エリアで検索..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-slate-800 pl-10"
-          />
-        </div>
-      </Card>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+        <Input
+          placeholder="店舗名・エリアで検索..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-zinc-900 border-none pl-10 h-12 rounded-xl focus:ring-1 focus:ring-zinc-600"
+        />
+      </div>
 
-      {/* 店舗カード一覧 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* 店舗リスト（X風） */}
+      <div className="space-y-3">
         {loading ? (
-          Array.from({ length: 6 }).map((_, idx) => (
-            <Card key={idx} className="border-slate-800 bg-slate-900/50 p-6">
-              <Skeleton className="h-32 w-full" />
+          Array.from({ length: 5 }).map((_, idx) => (
+            <Card key={idx} className="bg-zinc-900 p-4 rounded-xl">
+              <Skeleton className="h-16 w-full" />
             </Card>
           ))
         ) : filteredStores.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <p className="text-slate-400">
+          <Card className="bg-zinc-900 p-8 text-center rounded-xl">
+            <p className="text-zinc-400">
               {searchQuery ? '検索結果がありません' : '店舗がありません'}
             </p>
-          </div>
+          </Card>
         ) : (
           filteredStores.map((store) => (
             <Link key={store.id} href={`/stores/${store.id}`}>
-              <Card className="border-slate-800 bg-slate-900/50 p-6 transition-all hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10">
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold">{store.name}</h3>
-                      <div className="mt-1 flex items-center gap-1 text-sm text-slate-400">
-                        <MapPin className="h-3 w-3" />
-                        {store.area}
-                      </div>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className={systemTypeConfig[store.system_type]?.color || 'bg-slate-500/10 text-slate-400 border-slate-500/20'}
-                    >
-                      {store.system_type}
-                    </Badge>
+              <Card className="bg-zinc-900 p-4 hover:bg-zinc-800 transition-colors cursor-pointer rounded-xl">
+                <div className="flex items-start gap-3">
+                  {/* アイコン */}
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-800">
+                    <Store className="h-5 w-5 text-zinc-400" />
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-400">時給</span>
-                      <span className="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        ¥{store.hourly_wage_min.toLocaleString()} - ¥{store.hourly_wage_max.toLocaleString()}
+                  {/* 本文 */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-white">{store.name}</h3>
+                      <Badge
+                        variant="outline"
+                        className={systemTypeConfig[store.system_type]?.color || 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30'}
+                      >
+                        {store.system_type}
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-sm text-zinc-400 mb-2">
+                      <MapPin className="h-3 w-3" />
+                      {store.area}
+                    </div>
+
+                    <div className="flex items-center gap-3 text-sm">
+                      <span className="text-zinc-400">
+                        時給: <span className="text-white font-medium">¥{store.hourly_wage_min.toLocaleString()} - ¥{store.hourly_wage_max.toLocaleString()}</span>
                       </span>
-                    </div>
-                    {store.target_age_min && store.target_age_max && (
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-400">対象年齢</span>
-                        <span className="text-slate-300">
-                          {store.target_age_min}歳 - {store.target_age_max}歳
+                      {store.target_age_min && store.target_age_max && (
+                        <span className="text-zinc-400">
+                          対象: {store.target_age_min}歳-{store.target_age_max}歳
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
 
-                  {store.description && (
-                    <p className="text-sm text-slate-400 line-clamp-2">
-                      {store.description}
-                    </p>
-                  )}
-
-                  <Button
-                    variant="outline"
-                    className="w-full border-slate-700 hover:border-purple-500/50"
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    詳細を見る
-                  </Button>
+                  {/* 右矢印 */}
+                  <ChevronRight className="h-5 w-5 flex-shrink-0 text-zinc-500" />
                 </div>
               </Card>
             </Link>
           ))
         )}
       </div>
+
+      {/* 件数表示 */}
+      {!loading && filteredStores.length > 0 && (
+        <p className="text-center text-sm text-zinc-500">
+          {filteredStores.length}件の店舗
+        </p>
+      )}
     </div>
   );
 }
