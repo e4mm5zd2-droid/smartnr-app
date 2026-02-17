@@ -100,107 +100,12 @@ export default function ScoutTrackingPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="text-3xl">🔗</div>
-          <h1 className="text-3xl font-bold text-white">紹介トラッキング</h1>
+          <h1 className="text-3xl font-bold text-white">紹介</h1>
         </div>
       </div>
 
-      {/* タブ */}
-      <Tabs defaultValue="recruit" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 bg-zinc-800">
-          <TabsTrigger value="recruit">🌙 キャスト募集</TabsTrigger>
-          <TabsTrigger value="app">💎 アプリ紹介</TabsTrigger>
-        </TabsList>
-
-        {/* キャスト募集タブ */}
-        <TabsContent value="recruit" className="space-y-6">
-          {/* 統計カード */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard title="リンク" value={data.recruit.total_links} />
-            <StatCard title="クリック" value={data.recruit.total_clicks} />
-            <StatCard title="応募" value={data.recruit.total_submissions} />
-            <StatCard title="SB" value={`¥${Math.floor(data.recruit.total_sb / 10000)}万`} accent="#a1a1aa" />
-          </div>
-
-          {/* ファネル */}
-          <Card className="border-0 bg-zinc-900/50 p-6">
-            <h3 className="text-lg font-bold text-white mb-4">📊 ファネル</h3>
-            <FunnelBar
-              label="クリック"
-              value={data.recruit.total_clicks}
-              max={data.recruit.total_clicks}
-              color="#71717a"
-            />
-            <FunnelBar
-              label="応募"
-              value={data.recruit.funnel.submitted}
-              max={data.recruit.total_clicks}
-              color="#71717a"
-            />
-            <FunnelBar
-              label="面接"
-              value={data.recruit.funnel.interviewed}
-              max={data.recruit.total_clicks}
-              color="#71717a"
-            />
-            <FunnelBar label="体入" value={data.recruit.funnel.trial} max={data.recruit.total_clicks} color="#71717a" />
-            <FunnelBar label="採用" value={data.recruit.funnel.hired} max={data.recruit.total_clicks} color="#71717a" />
-            <FunnelBar
-              label="稼働中"
-              value={data.recruit.funnel.active}
-              max={data.recruit.total_clicks}
-              color="#71717a"
-            />
-            <div className="mt-4 pt-4 border-t border-zinc-700 flex justify-between text-sm">
-              <span className="text-zinc-400">
-                CVR: <span className="text-zinc-300 font-bold">{data.recruit.cvr}%</span>
-              </span>
-              <span className="text-zinc-400">
-                💰 未払いSB: <span className="text-zinc-300 font-bold">¥{data.recruit.unpaid_sb.toLocaleString()}</span>
-              </span>
-            </div>
-          </Card>
-
-          {/* リンク作成ボタン */}
-          <Link href="/tracking/new?type=recruit">
-            <Button className="w-full" size="lg">
-              <Plus className="h-5 w-5 mr-2" />
-              募集リンクを作成
-            </Button>
-          </Link>
-
-          {/* 最近の応募 */}
-          <Card className="border-0 bg-zinc-900/50 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white">📋 最近の応募</h3>
-              <Link href="/tracking/conversions?type=recruit">
-                <Button variant="ghost" size="sm">
-                  全て見る →
-                </Button>
-              </Link>
-            </div>
-            <div className="space-y-3">
-              {data.recruit.recent_conversions && data.recruit.recent_conversions.length > 0 ? (
-                data.recruit.recent_conversions.map((conv) => (
-                  <ConversionCard
-                    key={conv.id}
-                    id={conv.id}
-                    applicantName={conv.applicant_name}
-                    applicantAge={conv.applicant_age || undefined}
-                    linkType="recruit"
-                    shopName={conv.shop_name || undefined}
-                    status={conv.status}
-                    createdAt={conv.created_at}
-                  />
-                ))
-              ) : (
-                <p className="text-center text-zinc-400 py-8">まだ応募がありません</p>
-              )}
-            </div>
-          </Card>
-        </TabsContent>
-
-        {/* アプリ紹介タブ */}
-        <TabsContent value="app" className="space-y-6">
+      {/* アプリ紹介 */}
+      <div className="space-y-6">
           {/* 統計カード */}
           <div className="grid grid-cols-3 gap-4">
             <StatCard title="リンク" value={data.app_invite.total_links} />
@@ -249,8 +154,7 @@ export default function ScoutTrackingPage() {
               アプリ紹介リンクを作成
             </Button>
           </Link>
-        </TabsContent>
-      </Tabs>
+        </div>
 
       {/* 発行済みリンク一覧へのリンク */}
       <Link href="/tracking/links">

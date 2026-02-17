@@ -159,20 +159,6 @@ export function ConversionCard({
               ✏️ メモ
             </Button>
           )}
-          {isMaster && sbAmount && sbAmount > 0 && !sbPaid && (
-            <>
-              {onSbPay && (
-                <Button size="sm" variant="outline" onClick={() => onSbPay(id)}>
-                  ✅ SB支払い済みにする
-                </Button>
-              )}
-              {onSbAdjust && (
-                <Button size="sm" variant="outline" onClick={() => onSbAdjust(id, sbAmount)}>
-                  💰 SB調整
-                </Button>
-              )}
-            </>
-          )}
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ const campaigns = [
   },
   {
     id: 4,
-    title: '🎉 紹介トラッキング機能追加',
+    title: '🎉 紹介機能追加',
     body: 'スカウト専用の紹介リンクが発行できるようになりました。QRコード生成・クリック数・成約率の確認が可能です。',
     date: '2026-02-12',
     tag: 'アップデート',
@@ -63,13 +63,6 @@ export default function Home() {
     <div className="space-y-6 p-4">
       {/* お知らせ（上部に配置） */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">お知らせ</h2>
-          <Badge variant="outline" className="border-zinc-700 bg-zinc-800/50 text-zinc-400 text-xs">
-            {campaigns.length}件
-          </Badge>
-        </div>
-        
         <div className="space-y-3">
           {displayedCampaigns.map((campaign) => (
             <Card

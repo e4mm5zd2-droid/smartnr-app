@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Loader2, CheckCircle2, UserPlus } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, UserPlus, Sparkles, MapPin, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createCast } from "@/lib/api";
@@ -34,11 +34,22 @@ const areaOptions = [
   "その他",
 ];
 
+interface ShopRecommendation {
+  shop_id: number;
+  shop_name: string;
+  match_score: number;
+  ai_reason: string;
+  hourly_wage_min?: number;
+  hourly_wage_max?: number;
+}
+
 export default function NewCastPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState<ShopRecommendation[]>([]);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
   
   const [formData, setFormData] = useState({
     genji_name: "",
@@ -48,8 +59,6 @@ export default function NewCastPage() {
     experience: "未経験",
     preferred_area: "",
     looks_tags: [] as string[],
-    availability: "",
-    current_shop: "",
     notes: "",
   });
 
@@ -60,6 +69,38 @@ export default function NewCastPage() {
         ? prev.looks_tags.filter(t => t !== tag)
         : [...prev.looks_tags, tag]
     }));
+  };
+
+  const handleAIMatch = async () => {
+    if (!formData.age || !formData.preferred_area) {
+      setError("AIマッチングには年齢と希望エリアの入力が必要です");
+      return;
+    }
+
+    setIsLoadingAI(true);
+    setError(null);
+
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com';
+      const params = new URLSearchParams({
+        age: formData.age,
+        area: formData.preferred_area,
+      });
+      if (formData.looks_tags.length > 0) {
+        params.append('looks', formData.looks_tags.join(','));
+      }
+
+      const res = await fetch(`${API_BASE_URL}/api/shops/recommend?${params.toString()}`);
+      if (!res.ok) throw new Error('AI matching failed');
+      
+      const data = await res.json();
+      setAiRecommendations(data.slice(0, 3)); // Top 3のみ表示
+    } catch (err) {
+      console.error('AI matching error:', err);
+      setError('AIマッチングに失敗しました。もう一度お試しください。');
+    } finally {
+      setIsLoadingAI(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,9 +124,7 @@ export default function NewCastPage() {
 
     try {
       let cast_category: 'new' | 'experience' | 'active' | 'returner' = 'new';
-      if (formData.current_shop && formData.availability === '稼働中') {
-        cast_category = 'active';
-      } else if (formData.experience && formData.experience !== '未経験') {
+      if (formData.experience && formData.experience !== '未経験') {
         cast_category = 'experience';
       }
 
@@ -98,7 +137,6 @@ export default function NewCastPage() {
         preferred_area: formData.preferred_area || undefined,
         looks_tags: formData.looks_tags.length > 0 ? formData.looks_tags : undefined,
         notes: formData.notes || undefined,
-        current_shop: formData.current_shop || undefined,
         cast_category,
         status: 'pending',
       };
@@ -163,7 +201,7 @@ export default function NewCastPage() {
             value={formData.genji_name}
             onChange={(e) => setFormData({ ...formData, genji_name: e.target.value })}
             placeholder="例: まり"
-            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
+            className="bg-zinc-900 border-none rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
@@ -179,7 +217,7 @@ export default function NewCastPage() {
             placeholder="例: 21"
             min="18"
             max="50"
-            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
+            className="bg-zinc-900 border-none rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
@@ -193,7 +231,7 @@ export default function NewCastPage() {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="例: 090-1234-5678"
-            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
+            className="bg-zinc-900 border-none rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-600"
             required
           />
         </Card>
@@ -206,7 +244,7 @@ export default function NewCastPage() {
             value={formData.line_id}
             onChange={(e) => setFormData({ ...formData, line_id: e.target.value })}
             placeholder="例: mari_kyoto"
-            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
+            className="bg-zinc-900 border-none rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-600"
           />
         </Card>
 
@@ -240,7 +278,7 @@ export default function NewCastPage() {
             value={formData.experience}
             onValueChange={(value) => setFormData({ ...formData, experience: value })}
           >
-            <SelectTrigger className="bg-zinc-800 border-none rounded-lg">
+            <SelectTrigger className="bg-zinc-900 border-none rounded-lg px-4 py-3">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -260,7 +298,7 @@ export default function NewCastPage() {
             value={formData.preferred_area}
             onValueChange={(value) => setFormData({ ...formData, preferred_area: value })}
           >
-            <SelectTrigger className="bg-zinc-800 border-none rounded-lg">
+            <SelectTrigger className="bg-zinc-900 border-none rounded-lg px-4 py-3">
               <SelectValue placeholder="エリアを選択" />
             </SelectTrigger>
             <SelectContent>
@@ -275,27 +313,77 @@ export default function NewCastPage() {
 
         <Card className="bg-zinc-900 p-5 rounded-xl">
           <label className="block text-sm font-medium text-white mb-2">
-            現在の稼働店舗
-          </label>
-          <Input
-            value={formData.current_shop}
-            onChange={(e) => setFormData({ ...formData, current_shop: e.target.value })}
-            placeholder="例: Club LION（稼働中の場合）"
-            className="bg-zinc-800 border-none rounded-lg focus:ring-1 focus:ring-zinc-600"
-          />
-        </Card>
-
-        <Card className="bg-zinc-900 p-5 rounded-xl">
-          <label className="block text-sm font-medium text-white mb-2">
             メモ
           </label>
           <Textarea
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             placeholder="その他の情報があれば記入してください"
-            className="bg-zinc-800 border-none rounded-lg min-h-[100px] focus:ring-1 focus:ring-zinc-600"
+            className="bg-zinc-900 border-none rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 min-h-[100px] focus:ring-1 focus:ring-zinc-600"
           />
         </Card>
+
+        {/* AIマッチングボタン */}
+        <Card className="bg-zinc-900 p-5 rounded-xl border-2 border-white/10">
+          <div className="flex items-start gap-3 mb-3">
+            <Sparkles className="h-5 w-5 text-white flex-shrink-0 mt-1" />
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-white mb-1">AIで店舗マッチング</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                入力情報をもとにAIが最適な店舗を提案します
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={handleAIMatch}
+            disabled={isLoadingAI || !formData.age || !formData.preferred_area}
+            className="w-full bg-white text-zinc-950 hover:bg-zinc-200 h-10 rounded-lg"
+          >
+            {isLoadingAI ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                分析中...
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-4 w-4" />
+                AIマッチング実行
+              </>
+            )}
+          </Button>
+        </Card>
+
+        {/* AI推奨店舗表示 */}
+        {aiRecommendations.length > 0 && (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <h3 className="text-sm font-semibold text-white mb-3">🎯 おすすめ店舗 Top 3</h3>
+            <div className="space-y-3">
+              {aiRecommendations.map((shop, idx) => (
+                <Card key={shop.shop_id} className="bg-zinc-800 p-4 rounded-lg">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-white">
+                        {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                      </span>
+                      <h4 className="font-semibold text-white">{shop.shop_name}</h4>
+                    </div>
+                    <Badge className="bg-white text-zinc-950 text-xs font-bold">
+                      {Math.round(shop.match_score)}%
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-zinc-300 mb-2 leading-relaxed">{shop.ai_reason}</p>
+                  {shop.hourly_wage_min && shop.hourly_wage_max && (
+                    <div className="flex items-center gap-1 text-xs text-zinc-400">
+                      <DollarSign className="h-3 w-3" />
+                      時給 ¥{shop.hourly_wage_min.toLocaleString()} - ¥{shop.hourly_wage_max.toLocaleString()}
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* 保存ボタン */}
         <Button

@@ -84,7 +84,6 @@ export default function SignupPage() {
             id: authData.user.id,
             name: formData.name,
             email: formData.email,
-            rank: 'Regular', // デフォルトランク
           });
 
         if (insertError) {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getCasts, Cast } from '@/lib/api';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ const statusConfig = {
 type CastCategoryFilter = 'all' | CastCategory;
 
 export default function CastsPage() {
+  const router = useRouter();
   const [casts, setCasts] = useState<Cast[]>([]);
   const [filteredCasts, setFilteredCasts] = useState<Cast[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +60,17 @@ export default function CastsPage() {
 
   return (
     <div className="space-y-4 p-4">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">キャスト</h1>
+        <button
+          onClick={() => router.push('/casts/new')}
+          className="bg-white text-zinc-950 rounded-lg px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition"
+        >
+          + 新規
+        </button>
+      </div>
+
       {/* 検索バー */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />

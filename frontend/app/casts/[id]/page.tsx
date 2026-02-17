@@ -13,9 +13,6 @@ import {
   Calendar,
   Edit,
   Trash2,
-  Building2,
-  DollarSign,
-  TrendingUp,
   UserCircle2,
 } from 'lucide-react';
 import { Cast } from '@/lib/api';
@@ -151,37 +148,6 @@ export default function CastDetailPage() {
           </div>
         </div>
       </Card>
-
-      {/* 統計 */}
-      <div className="grid gap-3 grid-cols-3">
-        <Card className="bg-zinc-900 p-4 rounded-xl">
-          <div className="flex flex-col items-center gap-2">
-            <Building2 className="h-6 w-6 text-zinc-400" />
-            <div className="text-center">
-              <p className="text-xs text-zinc-500">面接店舗</p>
-              <p className="text-xl font-bold text-white">3</p>
-            </div>
-          </div>
-        </Card>
-        <Card className="bg-zinc-900 p-4 rounded-xl">
-          <div className="flex flex-col items-center gap-2">
-            <DollarSign className="h-6 w-6 text-emerald-400" />
-            <div className="text-center">
-              <p className="text-xs text-zinc-500">総報酬</p>
-              <p className="text-xl font-bold text-white">¥150k</p>
-            </div>
-          </div>
-        </Card>
-        <Card className="bg-zinc-900 p-4 rounded-xl">
-          <div className="flex flex-col items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-blue-400" />
-            <div className="text-center">
-              <p className="text-xs text-zinc-500">成約率</p>
-              <p className="text-xl font-bold text-white">66%</p>
-            </div>
-          </div>
-        </Card>
-      </div>
 
       {/* 面接履歴 */}
       <Card className="bg-zinc-900 p-5 rounded-xl">

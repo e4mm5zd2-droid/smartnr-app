@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import Link from 'next/link';
@@ -73,26 +73,6 @@ export default function MasterConversionsPage() {
     newStatus: '',
     memo: '',
     estimatedRevenue: 500000,
-  });
-
-  const [sbAdjustModal, setSbAdjustModal] = useState<{
-    open: boolean;
-    conversionId: number | null;
-    sbAmount: number;
-    shareRate: number;
-  }>({
-    open: false,
-    conversionId: null,
-    sbAmount: 125000,
-    shareRate: 70,
-  });
-
-  const [sbPayModal, setSbPayModal] = useState<{
-    open: boolean;
-    conversionId: number | null;
-  }>({
-    open: false,
-    conversionId: null,
   });
 
   const API_BASE_URL = 'https://smartnr-backend.onrender.com';
@@ -166,57 +146,6 @@ export default function MasterConversionsPage() {
     }
   };
 
-  const handleSbAdjust = async () => {
-    if (!sbAdjustModal.conversionId) return;
-
-    try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/master/tracking/conversions/${sbAdjustModal.conversionId}/sb`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            master_id: MASTER_ID,
-            sb_amount: sbAdjustModal.sbAmount,
-            share_rate: sbAdjustModal.shareRate,
-          }),
-        }
-      );
-
-      if (res.ok) {
-        fetchData();
-        setSbAdjustModal({ open: false, conversionId: null, sbAmount: 125000, shareRate: 70 });
-      }
-    } catch (err) {
-      console.error('Failed to adjust SB:', err);
-    }
-  };
-
-  const handleSbPay = async () => {
-    if (!sbPayModal.conversionId) return;
-
-    try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/master/tracking/conversions/${sbPayModal.conversionId}/sb`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            master_id: MASTER_ID,
-            is_sb_paid: true,
-          }),
-        }
-      );
-
-      if (res.ok) {
-        fetchData();
-        setSbPayModal({ open: false, conversionId: null });
-      }
-    } catch (err) {
-      console.error('Failed to mark as paid:', err);
-    }
-  };
-
   const getStatusBadgeColor = (status: string) => {
     const colors: Record<string, string> = {
       submitted: 'bg-slate-500/20 text-slate-400 border-slate-500',
@@ -263,7 +192,6 @@ export default function MasterConversionsPage() {
   };
 
   const { sb, scoutShare } = calculateSB(statusUpdateModal.estimatedRevenue);
-  const scoutShareFromAdjust = Math.floor((sbAdjustModal.sbAmount * sbAdjustModal.shareRate) / 100);
 
   if (loading) {
     return (
@@ -473,31 +401,6 @@ export default function MasterConversionsPage() {
                   >
                     ✏️ メモ
                   </Button>
-                  {conv.sb_amount > 0 && !conv.sb_paid && (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSbPayModal({ open: true, conversionId: conv.id })}
-                      >
-                        ✅ SB支払い済みにする
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          setSbAdjustModal({
-                            open: true,
-                            conversionId: conv.id,
-                            sbAmount: conv.sb_amount,
-                            shareRate: 70,
-                          })
-                        }
-                      >
-                        💰 SB調整
-                      </Button>
-                    </>
-                  )}
                 </div>
               </div>
             </Card>
@@ -598,72 +501,6 @@ export default function MasterConversionsPage() {
             <Button onClick={handleStatusUpdate}>
               {statusUpdateModal.newStatus === 'hired' ? '✅ 採用確定＋SB計算' : '更新'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* SB調整モーダル */}
-      <Dialog
-        open={sbAdjustModal.open}
-        onOpenChange={(open) => setSbAdjustModal({ ...sbAdjustModal, open })}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>💰 SB調整</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm text-slate-400 mb-2 block">SB金額</label>
-              <Input
-                type="number"
-                value={sbAdjustModal.sbAmount}
-                onChange={(e) =>
-                  setSbAdjustModal({ ...sbAdjustModal, sbAmount: parseInt(e.target.value) || 0 })
-                }
-              />
-            </div>
-            <div>
-              <label className="text-sm text-slate-400 mb-2 block">分配率 (%)</label>
-              <Slider
-                min={50}
-                max={100}
-                step={5}
-                value={[sbAdjustModal.shareRate]}
-                onValueChange={([value]) => setSbAdjustModal({ ...sbAdjustModal, shareRate: value })}
-              />
-              <p className="text-center text-lg font-bold text-white mt-2">{sbAdjustModal.shareRate}%</p>
-            </div>
-            <div className="p-4 rounded-lg bg-[#00C4CC]/10 border border-[#00C4CC]">
-              <p className="text-sm text-slate-300">スカウト手取り</p>
-              <p className="text-xl font-bold text-[#00C4CC]">¥{scoutShareFromAdjust.toLocaleString()}</p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() =>
-                setSbAdjustModal({ open: false, conversionId: null, sbAmount: 125000, shareRate: 70 })
-              }
-            >
-              キャンセル
-            </Button>
-            <Button onClick={handleSbAdjust}>💰 更新</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* SB支払い確認モーダル */}
-      <Dialog open={sbPayModal.open} onOpenChange={(open) => setSbPayModal({ ...sbPayModal, open })}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>SB支払い確認</DialogTitle>
-            <DialogDescription>このSBを支払い済みにしますか？</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSbPayModal({ open: false, conversionId: null })}>
-              キャンセル
-            </Button>
-            <Button onClick={handleSbPay}>✅ 支払い済みにする</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

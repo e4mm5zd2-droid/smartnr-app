@@ -13,8 +13,6 @@ import {
   DollarSign,
   Users,
   Building2,
-  Star,
-  TrendingUp,
   UserPlus,
 } from 'lucide-react';
 
@@ -153,34 +151,6 @@ export default function StoreDetailPage() {
               <p className="text-sm text-zinc-300 leading-relaxed">{store.description}</p>
             </Card>
           )}
-
-          {/* 統計 */}
-          <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="font-semibold text-white mb-4">登録統計</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                  <Users className="h-4 w-4" />
-                  <span>在籍キャスト</span>
-                </div>
-                <span className="text-lg font-bold text-white">12名</span>
-              </div>
-              <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
-                <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>面接成約率</span>
-                </div>
-                <span className="text-lg font-bold text-emerald-400">75%</span>
-              </div>
-              <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
-                <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                  <Star className="h-4 w-4" />
-                  <span>人気度</span>
-                </div>
-                <span className="text-lg font-bold text-yellow-400">4.5/5</span>
-              </div>
-            </div>
-          </Card>
 
           {/* クイックアクション */}
           <Link href="/casts/new">
