@@ -96,14 +96,14 @@ export default function Home() {
                     </Badge>
                     
                     <div className="flex items-center gap-4 text-xs text-zinc-500">
-                      <button className="flex items-center gap-1 hover:text-red-400 transition-colors">
+                      <span className="flex items-center gap-1">
                         <Heart className="h-3.5 w-3.5" />
                         <span>{campaign.likes}</span>
-                      </button>
-                      <button className="flex items-center gap-1 hover:text-blue-400 transition-colors">
+                      </span>
+                      <span className="flex items-center gap-1">
                         <MessageSquare className="h-3.5 w-3.5" />
                         <span>{campaign.comments}</span>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>

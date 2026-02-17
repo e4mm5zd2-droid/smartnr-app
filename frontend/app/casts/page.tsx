@@ -146,7 +146,7 @@ export default function CastsPage() {
               <Card className="bg-zinc-900 p-4 hover:bg-zinc-800 transition-colors cursor-pointer rounded-xl">
                 <div className="flex items-start gap-3">
                   {/* アバター */}
-                  <UserCircle2 className="h-12 w-12 flex-shrink-0 text-zinc-500" />
+                  <UserCircle2 className="h-12 w-12 flex-shrink-0 text-zinc-300" />
 
                   {/* 本文 */}
                   <div className="flex-1 min-w-0">

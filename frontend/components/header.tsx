@@ -26,11 +26,6 @@ export function Header() {
         </span>
       </Link>
 
-      {/* 検索（デスクトップのみ） */}
-      <div className="hidden lg:flex flex-1 max-w-md mx-4">
-        <SearchPopover />
-      </div>
-
       {/* 右側アイコン */}
       <div className="flex items-center gap-2 px-4">
         <PushNotificationButton />
