@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .config import settings
+from supabase import create_client, Client
 
 # データベースエンジン作成
 engine = create_engine(
@@ -25,3 +26,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def get_supabase() -> Client:
+    """Supabaseクライアント取得（アクセスログMiddleware用）"""
+    return create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
