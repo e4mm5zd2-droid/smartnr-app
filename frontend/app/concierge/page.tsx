@@ -111,44 +111,107 @@ export default function ConciergePage() {
     setInput('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: [...messages, userMessage].map(m => ({
-            role: m.role,
-            content: m.content,
-          })),
-        }),
-      });
+    let aiText = '';
 
-      if (!response.ok) {
-        throw new Error('AI応答に失敗しました');
+    try {
+      // ── 試行1: Next.js API Route (/api/ai/chat) ──
+      try {
+        const response = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [...messages, userMessage].map(m => ({
+              role: m.role,
+              content: m.content,
+            })),
+          }),
+          signal: AbortSignal.timeout(10000),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          aiText = data.message?.content || data.content || data.response || '';
+        }
+      } catch (apiErr) {
+        console.log('[API Route] 失敗、次の手段へ:', apiErr);
       }
 
-      const data = await response.json();
+      // ── 試行2: xAI API 直接呼び出し（フロントエンドから） ──
+      if (!aiText) {
+        const apiKey = process.env.NEXT_PUBLIC_XAI_API_KEY;
+        if (apiKey) {
+          try {
+            const xaiRes = await fetch('https://api.x.ai/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+              },
+              body: JSON.stringify({
+                model: 'grok-2-mini-1220',
+                messages: [
+                  {
+                    role: 'system',
+                    content: `あなたはSmartNR AI Conciergeです。
+ナイトワーク（キャバクラ・スナック・ラウンジ・ガールズバー等）のスカウト業務をサポートするAIアシスタントです。
+
+主な対応範囲：
+- キャスト情報の検索・管理アドバイス
+- 店舗のおすすめ・マッチング提案（祇園・木屋町・先斗町・河原町・ミナミ・キタ等のエリア）
+- 給料計算（売上 × SB率 = スカウト報酬）
+- 面接・体入のフロー説明
+- スカウト業務の一般的な質問
+
+回答ルール：
+- 簡潔で実用的に（3〜5文程度）
+- 日本語で回答
+- スカウト業界用語（体入・SB・源氏名・本指名・フリー等）を理解して使う
+- 質問の意図が不明な場合は確認する`,
+                  },
+                  ...messages.slice(-8).map((m) => ({
+                    role: m.role as 'user' | 'assistant',
+                    content: m.content,
+                  })),
+                  { role: 'user' as const, content },
+                ],
+                max_tokens: 800,
+                temperature: 0.7,
+              }),
+            });
+
+            if (xaiRes.ok) {
+              const xaiData = await xaiRes.json();
+              aiText = xaiData.choices?.[0]?.message?.content || '';
+            } else {
+              const errData = await xaiRes.json().catch(() => ({}));
+              console.error('[xAI Error]', xaiRes.status, errData);
+            }
+          } catch (xaiErr) {
+            console.error('[xAI Fetch Error]', xaiErr);
+          }
+        }
+      }
+
+      // ── 試行3: オフラインフォールバック ──
+      if (!aiText) {
+        aiText = generateFallbackResponse(content);
+      }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.message.content,
+        content: aiText,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('AI Chat Error:', error);
-      
-      // フォールバック応答（キーワードベース）
-      const fallbackContent = generateFallbackResponse(content);
+      console.error('[Concierge Error]', error);
       
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: fallbackContent,
+        content: '一時的にエラーが発生しました。もう一度お試しください。',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -157,23 +220,31 @@ export default function ConciergePage() {
     }
   };
 
-  // フォールバック応答生成
+  // フォールバック応答生成（キーワードベース、オフライン時）
   const generateFallbackResponse = (query: string): string => {
-    const lowerQuery = query.toLowerCase();
+    const q = query.toLowerCase();
     
-    if (lowerQuery.includes('キャスト') || lowerQuery.includes('探') || lowerQuery.match(/\d{2}代/)) {
-      return '現在AIサーバーに接続できません。\n\n📋 キャスト一覧ページのフィルタ機能をご利用ください。\n\n左メニューの「キャスト」から条件で絞り込みが可能です。';
+    if (q.includes('おすすめ') || q.includes('店舗') || q.includes('マッチング')) {
+      return '店舗のおすすめは「店舗マッチング」タブから確認できます。\nキャストの年齢・雰囲気・希望エリアを入力すると最適な店舗を提案します。';
     }
     
-    if (lowerQuery.includes('店舗') || lowerQuery.includes('おすすめ') || lowerQuery.includes('マッチング')) {
-      return '現在AIサーバーに接続できません。\n\n🏪 「店舗マッチング」タブから手動でマッチングを実行できます。\n\n新規登録画面の「AIに聞く」ボタンからもアクセス可能です。';
+    if (q.includes('給料') || q.includes('給与') || q.includes('sb') || q.includes('報酬')) {
+      return '給料の計算式：売上 × SB率(分配率) = スカウト報酬\n\nホーム画面下部の「給料申請」から申請できます。各店舗のSB率は店舗詳細ページで確認してください。';
     }
     
-    if (lowerQuery.includes('報酬') || lowerQuery.includes('計算') || lowerQuery.includes('給料')) {
-      return '現在AIサーバーに接続できません。\n\n💰 「紹介トラッキング」ページから報酬の詳細を確認できます。';
+    if (q.includes('登録') || q.includes('キャスト') || q.includes('追加')) {
+      return 'キャスト登録手順：\n1. 「キャスト」タブ → 右上「+」\n2. 写真アップロード → AI分析\n3. 基本情報入力 → 保存\n\nAI顔分析で年齢・雰囲気を自動判定します。';
     }
     
-    return '現在AIサーバーに接続できません。\n\n⚡ SmartNRの各機能は左メニューからご利用いただけます：\n• キャスト管理\n• 店舗情報\n• 紹介トラッキング\n• AI店舗マッチング\n\nサーバー復旧後、自動的にAI応答が有効になります。';
+    if (q.includes('面接') || q.includes('体入')) {
+      return '面接管理はキャスト詳細ページの「面接履歴」セクションから行えます。\n\nステータス: 初回接触 → 面談 → 店舗紹介 → 体入 → 採用 → 稼働中';
+    }
+    
+    if (q.includes('祇園') || q.includes('木屋町') || q.includes('先斗町')) {
+      return 'エリア別の店舗情報は「店舗」タブから確認できます。\n「店舗マッチング」タブでエリアを選択するとAIがおすすめ店舗を提案します。';
+    }
+    
+    return '申し訳ございません。現在AI応答を取得できませんでした。\n\n以下は直接ご利用いただけます：\n📱 「店舗マッチング」タブ\n👤 「キャスト」タブ\n🏪 「店舗」タブ';
   };
 
   const toggleLookType = (type: string) => {
