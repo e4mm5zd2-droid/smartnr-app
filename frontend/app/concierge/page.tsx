@@ -142,16 +142,38 @@ export default function ConciergePage() {
     } catch (error) {
       console.error('AI Chat Error:', error);
       
+      // フォールバック応答（キーワードベース）
+      const fallbackContent = generateFallbackResponse(content);
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: '申し訳ございません。AI応答の生成中にエラーが発生しました。しばらくしてから再度お試しください。',
+        content: fallbackContent,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // フォールバック応答生成
+  const generateFallbackResponse = (query: string): string => {
+    const lowerQuery = query.toLowerCase();
+    
+    if (lowerQuery.includes('キャスト') || lowerQuery.includes('探') || lowerQuery.match(/\d{2}代/)) {
+      return '現在AIサーバーに接続できません。\n\n📋 キャスト一覧ページのフィルタ機能をご利用ください。\n\n左メニューの「キャスト」から条件で絞り込みが可能です。';
+    }
+    
+    if (lowerQuery.includes('店舗') || lowerQuery.includes('おすすめ') || lowerQuery.includes('マッチング')) {
+      return '現在AIサーバーに接続できません。\n\n🏪 「店舗マッチング」タブから手動でマッチングを実行できます。\n\n新規登録画面の「AIに聞く」ボタンからもアクセス可能です。';
+    }
+    
+    if (lowerQuery.includes('報酬') || lowerQuery.includes('計算') || lowerQuery.includes('給料')) {
+      return '現在AIサーバーに接続できません。\n\n💰 「紹介トラッキング」ページから報酬の詳細を確認できます。';
+    }
+    
+    return '現在AIサーバーに接続できません。\n\n⚡ SmartNRの各機能は左メニューからご利用いただけます：\n• キャスト管理\n• 店舗情報\n• 紹介トラッキング\n• AI店舗マッチング\n\nサーバー復旧後、自動的にAI応答が有効になります。';
   };
 
   const toggleLookType = (type: string) => {
@@ -234,7 +256,7 @@ export default function ConciergePage() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl p-4 md:p-6 h-[calc(100vh-4rem)]">
+    <div className="container mx-auto max-w-4xl p-4 md:p-6 pb-24 h-[calc(100vh-4rem)]">
       <div className="flex h-full flex-col space-y-4">
         {/* 戻るリンク */}
         <Link 

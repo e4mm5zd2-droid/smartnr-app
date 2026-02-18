@@ -53,7 +53,7 @@ export default function StoresPage() {
   };
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 p-4 pb-24">
       {/* ヘッダー */}
       <div>
         <h1 className="text-2xl font-bold text-white">店舗</h1>

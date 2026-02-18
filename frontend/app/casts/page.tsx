@@ -88,7 +88,7 @@ export default function CastsPage() {
           variant="outline"
           size="sm"
           onClick={() => setCategoryFilter('all')}
-          className={`flex-shrink-0 ${categoryFilter === 'all' ? 'bg-white text-zinc-950' : 'border-zinc-700 bg-zinc-900 text-zinc-400'}`}
+          className={`flex-shrink-0 ${categoryFilter === 'all' ? 'bg-white text-zinc-950 font-semibold border-white' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
         >
           全て
         </Button>
@@ -96,7 +96,7 @@ export default function CastsPage() {
           variant="outline"
           size="sm"
           onClick={() => setCategoryFilter('new')}
-          className={`flex-shrink-0 ${categoryFilter === 'new' ? 'bg-red-500/20 text-red-400 border-red-500' : 'border-zinc-700 bg-zinc-900 text-zinc-400'}`}
+          className={`flex-shrink-0 ${categoryFilter === 'new' ? 'bg-red-500/20 text-red-400 border-red-500 font-semibold' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
         >
           🆕 新人
         </Button>
@@ -104,7 +104,7 @@ export default function CastsPage() {
           variant="outline"
           size="sm"
           onClick={() => setCategoryFilter('experience')}
-          className={`flex-shrink-0 ${categoryFilter === 'experience' ? 'bg-white text-zinc-950' : 'border-zinc-700 bg-zinc-900 text-zinc-400'}`}
+          className={`flex-shrink-0 ${categoryFilter === 'experience' ? 'bg-white text-zinc-950 font-semibold border-white' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
         >
           👩 経験あり
         </Button>
@@ -112,7 +112,7 @@ export default function CastsPage() {
           variant="outline"
           size="sm"
           onClick={() => setCategoryFilter('active')}
-          className={`flex-shrink-0 ${categoryFilter === 'active' ? 'bg-green-500/20 text-green-400 border-green-500' : 'border-zinc-700 bg-zinc-900 text-zinc-400'}`}
+          className={`flex-shrink-0 ${categoryFilter === 'active' ? 'bg-green-500/20 text-green-400 border-green-500 font-semibold' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
         >
           🟢 稼働中
         </Button>

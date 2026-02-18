@@ -16,14 +16,10 @@ export function Header() {
       }}
     >
       {/* ロゴ */}
-      <Link href="/" className="flex items-center gap-2 px-4">
+      <Link href="/" className="flex items-center px-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
           <span className="text-sm font-bold text-zinc-950">SN</span>
         </div>
-        <span className="text-lg font-bold hidden sm:block">
-          <span className="text-white">Smart</span>
-          <span className="smartnr-logo-nr">NR</span>
-        </span>
       </Link>
 
       {/* 右側アイコン */}

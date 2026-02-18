@@ -88,10 +88,33 @@ export default function CastDetailPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="ghost" className="bg-zinc-800 text-white hover:bg-zinc-700">
+          <Button 
+            variant="ghost" 
+            className="bg-zinc-800 text-white hover:bg-zinc-700"
+            onClick={() => router.push(`/casts/new?edit=${params.id}`)}
+          >
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" className="text-red-400 hover:bg-red-500/10">
+          <Button 
+            variant="ghost" 
+            className="text-red-400 hover:bg-red-500/10"
+            onClick={async () => {
+              if (!confirm('このキャストを削除しますか？')) return;
+              try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/job-seekers/${params.id}`, {
+                  method: 'DELETE',
+                });
+                if (res.ok) {
+                  router.push('/casts');
+                  router.refresh();
+                } else {
+                  alert('削除に失敗しました');
+                }
+              } catch (error) {
+                alert('削除に失敗しました: ' + error);
+              }
+            }}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -151,7 +174,18 @@ export default function CastDetailPage() {
 
       {/* 面接履歴 */}
       <Card className="bg-zinc-900 p-5 rounded-xl">
-        <h3 className="mb-4 text-lg font-semibold text-white">面接履歴</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-white">面接履歴</h3>
+          <Button
+            size="sm"
+            className="bg-white text-zinc-950 hover:bg-zinc-200"
+            onClick={() => {
+              alert('面接追加機能は準備中です。\n\n次回のアップデートで実装予定です。');
+            }}
+          >
+            + 面接を追加
+          </Button>
+        </div>
         <p className="text-sm text-zinc-400">面接履歴がありません</p>
       </Card>
     </div>

@@ -62,7 +62,15 @@ export function NotificationsPopover() {
         <div className="flex items-center justify-between border-b border-zinc-800 p-4">
           <h3 className="font-semibold text-white">通知</h3>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="h-7 text-xs">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-7 text-xs text-zinc-400 hover:text-white"
+              onClick={() => {
+                // すべて既読にする（モックデータの場合は状態更新のみ）
+                console.log('すべて既読');
+              }}
+            >
               すべて既読
             </Button>
           </div>
@@ -100,7 +108,7 @@ export function NotificationsPopover() {
                           ? 'text-green-400'
                           : notification.type === 'warning'
                           ? 'text-yellow-400'
-                          : 'text-[#00C4CC]'
+                          : 'text-zinc-400'
                       }`} />
                     </div>
                     <div className="flex-1 space-y-1">
@@ -110,15 +118,14 @@ export function NotificationsPopover() {
                         </p>
                         {!notification.read && (
                           <div 
-                            className="mt-1 h-2 w-2 rounded-full"
-                            style={{ backgroundColor: '#00C4CC' }}
+                            className="mt-1 h-2 w-2 rounded-full bg-white"
                           />
                         )}
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed">
+                      <p className="text-xs text-zinc-400 leading-relaxed">
                         {notification.message}
                       </p>
-                      <p className="text-xs text-slate-500">{notification.time}</p>
+                      <p className="text-xs text-zinc-500">{notification.time}</p>
                     </div>
                   </div>
                 </div>
@@ -132,6 +139,10 @@ export function NotificationsPopover() {
           <Button 
             variant="ghost" 
             className="w-full justify-center text-xs text-zinc-400 hover:text-white"
+            onClick={() => {
+              // /notifications に遷移
+              window.location.href = '/notifications';
+            }}
           >
             すべての通知を見る
           </Button>
