@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#00C4CC",
+  themeColor: "#000000",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -37,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="ja" className="bg-black" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased bg-zinc-950`} style={{ backgroundColor: "#020617" }}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

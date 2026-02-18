@@ -4,8 +4,8 @@
   "description": "紹介トラッキング・AI分析機能搭載のナイトワーク管理システム",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0F172A",
-  "theme_color": "#00C4CC",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait",
   "scope": "/",
   "categories": ["business", "productivity"]

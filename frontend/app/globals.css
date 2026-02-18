@@ -266,3 +266,54 @@ a:active {
     );
   }
 }
+
+/* ════════════════════════════════════════ */
+/* PWA セーフエリア対応（白い線の修正）       */
+/* ════════════════════════════════════════ */
+
+/* html/bodyの背景を黒にしてPWA境界線を消す */
+html {
+  background-color: #000000;
+}
+
+body {
+  background-color: #020617; /* zinc-950 */
+}
+
+/* iOSステータスバー領域の背景色 */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    background-color: #000000;
+    z-index: 9999;
+  }
+}
+
+/* ════════════════════════════════════════ */
+/* iOS PWA スクロール改善                    */
+/* ════════════════════════════════════════ */
+
+/* タブ内コンテンツのスムーズスクロール */
+.scroll-container,
+[data-scroll="smooth"] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+}
+
+/* PWAモードでのbody固定防止 */
+html, body {
+  overscroll-behavior: none;
+}
+
+/* タッチイベントがスクロールをブロックしないようにする */
+.touch-scroll-fix {
+  touch-action: pan-y;
+}
+

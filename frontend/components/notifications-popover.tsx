@@ -20,32 +20,7 @@ interface Notification {
   type: 'success' | 'info' | 'warning';
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    title: '新規キャスト登録',
-    message: 'あやかさんの登録が完了しました',
-    time: '2時間前',
-    read: false,
-    type: 'success',
-  },
-  {
-    id: '2',
-    title: '面接予定',
-    message: 'みゆきさんの面接が明日 15:00 に設定されました',
-    time: '5時間前',
-    read: false,
-    type: 'info',
-  },
-  {
-    id: '3',
-    title: '給料申請承認',
-    message: '2月分の報酬申請が承認されました（¥150,000）',
-    time: '1日前',
-    read: true,
-    type: 'success',
-  },
-];
+const mockNotifications: Notification[] = [];
 
 export function NotificationsPopover() {
   const unreadCount = mockNotifications.filter((n) => !n.read).length;
