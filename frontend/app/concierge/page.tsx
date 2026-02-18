@@ -256,7 +256,7 @@ export default function ConciergePage() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl p-4 md:p-6 pb-24 h-[calc(100vh-4rem)]">
+    <div className="container mx-auto max-w-4xl p-4 md:p-6 pb-32 h-[calc(100vh-4rem)]">
       <div className="flex h-full flex-col space-y-4">
         {/* 戻るリンク */}
         <Link 

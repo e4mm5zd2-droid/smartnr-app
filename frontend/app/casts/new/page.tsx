@@ -272,7 +272,7 @@ export default function NewCastPage() {
   }
 
   return (
-    <div className="space-y-4 p-4 pb-24">
+    <div className="space-y-4 p-4 pb-32">
       {/* ヘッダー */}
       <div className="flex items-center gap-3">
         <Link href="/casts">
