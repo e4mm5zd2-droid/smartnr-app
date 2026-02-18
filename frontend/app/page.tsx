@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Users, Store, Sparkles, MessageSquare, Heart } from 'lucide-react';
+import { UserPlus, Users, Store, Sparkles, MessageSquare, Heart, Calendar } from 'lucide-react';
 
 // キャンペーン掲示板のモックデータ（将来的にSupabaseのcampaignsテーブルから取得）
 const campaigns = [
@@ -150,6 +150,14 @@ export default function Home() {
               <Store className="h-7 w-7 text-zinc-400 mb-2" />
               <h3 className="font-semibold text-white">店舗</h3>
               <p className="text-xs text-zinc-400 mt-1">管理・詳細</p>
+            </Card>
+          </Link>
+
+          <Link href="/schedule">
+            <Card className="bg-zinc-900 p-5 transition-all hover:bg-zinc-800 cursor-pointer h-full rounded-xl">
+              <Calendar className="h-7 w-7 text-zinc-400 mb-2" />
+              <h3 className="font-semibold text-white">面接予約</h3>
+              <p className="text-xs text-zinc-400 mt-1">スケジュール</p>
             </Card>
           </Link>
 
