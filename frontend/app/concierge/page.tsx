@@ -292,7 +292,7 @@ export default function ConciergePage() {
           </TabsList>
 
           {/* タブ1: AIチャット */}
-          <TabsContent value="chat" className="flex-1 flex flex-col space-y-4 mt-4">
+          <TabsContent value="chat" className="flex-1 flex flex-col space-y-4 mt-4 pb-32">
             {/* サンプルクエリ */}
             {messages.length === 1 && (
               <div className="flex flex-wrap justify-center gap-2">
@@ -411,7 +411,7 @@ export default function ConciergePage() {
           </TabsContent>
 
           {/* タブ2: 店舗マッチング */}
-          <TabsContent value="matching" className="flex-1 flex flex-col space-y-4 mt-4">
+          <TabsContent value="matching" className="flex-1 flex flex-col space-y-4 mt-4 pb-32">
             {!matchingResult ? (
               /* Step 1: 入力フォーム */
               <Card className="border-zinc-800 bg-zinc-900/50 p-4 md:p-6">
