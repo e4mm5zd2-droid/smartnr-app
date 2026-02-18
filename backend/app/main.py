@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.database import get_supabase
 from app.routers import router
 from app.routers.ai import router as ai_router
 from app.routers.ai_matching import router as ai_matching_router
@@ -9,6 +10,8 @@ from app.routers.cast_parser import router as cast_parser_router
 from app.routers.scout_links import router as scout_links_router
 from app.routers.mini_lp import router as mini_lp_router
 from app.routers.master_tracking import router as master_tracking_router
+from app.routers.access_logs import router as access_logs_router
+from app.middleware.access_logger import AccessLogMiddleware
 
 # Supabaseを使用するため、SQLAlchemyのテーブル自動作成は不要
 
@@ -29,6 +32,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# アクセスログMiddleware（全リクエストを記録）
+supabase_client = get_supabase()
+app.add_middleware(AccessLogMiddleware, supabase_client=supabase_client)
+
 # ルーター登録
 app.include_router(router, prefix="/api", tags=["CRUD API"])
 app.include_router(ai_router, prefix="/api", tags=["AI機能"])
@@ -38,6 +45,7 @@ app.include_router(cast_parser_router, prefix="/api/cast-parser", tags=["キャ�
 app.include_router(scout_links_router, prefix="/api/links", tags=["スカウトリンク管理"])
 app.include_router(mini_lp_router, prefix="/api", tags=["ミニLP"])
 app.include_router(master_tracking_router, prefix="/api/master/tracking", tags=["マスター管理"])
+app.include_router(access_logs_router, tags=["管理者ログ"])
 
 
 @app.get("/")

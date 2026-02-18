@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Users, Building2, Settings as SettingsIcon, Database } from 'lucide-react';
+import { ArrowLeft, Users, Building2, Settings as SettingsIcon, Database, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 
@@ -75,6 +75,12 @@ export default function AdminPage() {
           
           {isDeveloper && (
             <>
+              <Link href="/admin/access-logs">
+                <Button variant="ghost" className="w-full justify-start h-12 text-white hover:bg-zinc-800">
+                  <Activity className="h-5 w-5 mr-3" />
+                  アクセスログ
+                </Button>
+              </Link>
               <Link href="/admin/users">
                 <Button variant="ghost" className="w-full justify-start h-12 text-zinc-400 hover:bg-zinc-800 hover:text-white">
                   <Users className="h-5 w-5 mr-3" />
