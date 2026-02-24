@@ -89,6 +89,30 @@ export default function StoreDetailPage() {
   useEffect(() => {
     const fetchStore = async () => {
       try {
+        // Supabase直接クエリ（raw_infoを含む全フィールドを取得）
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (supabaseUrl && supabaseKey) {
+          const res = await fetch(
+            `${supabaseUrl}/rest/v1/shops?id=eq.${params.id}&select=*`,
+            {
+              headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${supabaseKey}`,
+              },
+            }
+          );
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              setStore(data[0]);
+              return;
+            }
+          }
+        }
+
+        // フォールバック: バックエンドAPI
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com'}/api/stores/${params.id}`
         );

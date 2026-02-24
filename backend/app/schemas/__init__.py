@@ -61,6 +61,8 @@ class ShopResponse(ShopBase):
     """店舗レスポンススキーマ"""
     id: int
     created_at: datetime
+    pref: Optional[str] = None
+    raw_info: Optional[dict] = None
 
     model_config = ConfigDict(from_attributes=True)
 
