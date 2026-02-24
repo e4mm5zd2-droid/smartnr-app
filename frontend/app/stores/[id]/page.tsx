@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ArrowLeft,
   MapPin,
@@ -52,6 +51,15 @@ interface RawInfo {
   source_url?: string;
 }
 
+function SectionHeader({ title, icon }: { title: string; icon?: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      {icon && <span className="text-zinc-400">{icon}</span>}
+      <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{title}</h3>
+    </div>
+  );
+}
+
 function InfoRow({ label, value, icon }: { label: string; value?: string | null; icon?: React.ReactNode }) {
   if (!value) return null;
   return (
@@ -89,7 +97,6 @@ export default function StoreDetailPage() {
   useEffect(() => {
     const fetchStore = async () => {
       try {
-        // Supabase直接クエリ（raw_infoを含む全フィールドを取得）
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -112,7 +119,6 @@ export default function StoreDetailPage() {
           }
         }
 
-        // フォールバック: バックエンドAPI
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL || 'https://smartnr-backend.onrender.com'}/api/stores/${params.id}`
         );
@@ -161,7 +167,7 @@ export default function StoreDetailPage() {
   const conditions = raw.詳細条件 || {};
 
   return (
-    <div className="flex flex-col min-h-screen pb-24">
+    <div className="flex flex-col min-h-screen pb-32">
       {/* ヘッダー */}
       <div className="bg-zinc-950 p-4 space-y-3 sticky top-0 z-10 border-b border-zinc-800">
         <div className="flex items-center gap-3">
@@ -188,161 +194,110 @@ export default function StoreDetailPage() {
         </div>
       </div>
 
-      {/* タブ */}
-      <Tabs defaultValue="info" className="flex-1 flex flex-col">
-        <TabsList className="w-full bg-zinc-900 border-b border-zinc-800 rounded-none h-12 shrink-0">
-          <TabsTrigger value="info" className="flex-1 data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-xs">
-            基本情報
-          </TabsTrigger>
-          <TabsTrigger value="pay" className="flex-1 data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-xs">
-            給与・バック
-          </TabsTrigger>
-          <TabsTrigger value="rules" className="flex-1 data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-xs">
-            ルール・条件
-          </TabsTrigger>
-        </TabsList>
+      {/* ─── スクロールコンテンツ ─── */}
+      <div className="space-y-4 p-4">
 
-        {/* ─── 基本情報タブ ─── */}
-        <TabsContent value="info" className="flex-1 space-y-4 p-4 m-0">
-          {/* 時給・採用情報カード */}
+        {/* 採用情報 */}
+        <Card className="bg-zinc-900 p-5 rounded-xl">
+          <SectionHeader title="採用情報" icon={<DollarSign className="h-4 w-4" />} />
+          <div className="space-y-0">
+            <InfoRow label="採用時給" value={raw.採用時給} icon={<DollarSign className="h-4 w-4" />} />
+            <InfoRow label="対象年齢" value={raw.年齢シフト} icon={<Users className="h-4 w-4" />} />
+            <InfoRow label="給与方式" value={raw.給与システム} icon={<TrendingUp className="h-4 w-4" />} />
+            <InfoRow label="給料日" value={raw.給料日} icon={<Calendar className="h-4 w-4" />} />
+          </div>
+        </Card>
+
+        {/* 給与・バック */}
+        {raw.バック類 ? (
           <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">採用情報</h3>
-            <div className="space-y-0">
-              <InfoRow label="採用時給" value={raw.採用時給} icon={<DollarSign className="h-4 w-4" />} />
-              <InfoRow label="対象年齢" value={raw.年齢シフト} icon={<Users className="h-4 w-4" />} />
-              <InfoRow label="給与方式" value={raw.給与システム} icon={<TrendingUp className="h-4 w-4" />} />
-              <InfoRow label="給料日" value={raw.給料日} icon={<Calendar className="h-4 w-4" />} />
+            <SectionHeader title="バック類" icon={<CreditCard className="h-4 w-4" />} />
+            <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.バック類}</p>
+          </Card>
+        ) : (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <SectionHeader title="バック類" icon={<CreditCard className="h-4 w-4" />} />
+            <p className="text-sm text-zinc-500">バック情報は非公開です</p>
+          </Card>
+        )}
+
+        {raw.引かれもの && (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <SectionHeader title="引かれもの" icon={<TrendingUp className="h-4 w-4" />} />
+            <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.引かれもの}</p>
+          </Card>
+        )}
+
+        {/* 店舗情報 */}
+        <Card className="bg-zinc-900 p-5 rounded-xl">
+          <SectionHeader title="店舗情報" icon={<Building2 className="h-4 w-4" />} />
+          <div className="space-y-0">
+            <InfoRow label="エリア" value={raw.都道府県 ? `${raw.都道府県} ${raw.エリア || ''}` : store.area} icon={<MapPin className="h-4 w-4" />} />
+            <InfoRow label="住所" value={raw.住所} icon={<Building2 className="h-4 w-4" />} />
+            <InfoRow label="営業時間" value={raw.営業時間} icon={<Clock className="h-4 w-4" />} />
+            <InfoRow label="卓数" value={raw.卓数} icon={<LayoutGrid className="h-4 w-4" />} />
+            <InfoRow label="客層" value={raw.客層} icon={<Users className="h-4 w-4" />} />
+            <InfoRow label="系列店" value={raw.系列店} icon={<Building2 className="h-4 w-4" />} />
+          </div>
+        </Card>
+
+        {/* 入店条件 */}
+        <Card className="bg-zinc-900 p-5 rounded-xl">
+          <SectionHeader title="入店条件" icon={<Shield className="h-4 w-4" />} />
+          <div className="space-y-0">
+            <InfoRow label="身分証" value={raw.身分証} icon={<Shield className="h-4 w-4" />} />
+            <InfoRow label="衣装" value={raw.衣装} icon={<Shirt className="h-4 w-4" />} />
+            <InfoRow label="寮" value={raw.寮} icon={<Home className="h-4 w-4" />} />
+          </div>
+        </Card>
+
+        {/* ノルマ・ペナルティ */}
+        {raw.ノルマペナルティ && (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <SectionHeader title="ノルマ・ペナルティ" icon={<AlertTriangle className="h-4 w-4" />} />
+            <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.ノルマペナルティ}</p>
+          </Card>
+        )}
+
+        {/* 送り */}
+        {raw.送り && (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <SectionHeader title="送りについて" icon={<Car className="h-4 w-4" />} />
+            <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.送り}</p>
+          </Card>
+        )}
+
+        {/* 詳細条件バッジ */}
+        {Object.keys(conditions).length > 0 && (
+          <Card className="bg-zinc-900 p-5 rounded-xl">
+            <SectionHeader title="詳細条件" />
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(conditions).map(([key, val]) => (
+                <ConditionBadge key={key} label={key} value={val as boolean} />
+              ))}
             </div>
           </Card>
+        )}
 
-          {/* 店舗情報カード */}
-          <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">店舗情報</h3>
-            <div className="space-y-0">
-              <InfoRow label="エリア" value={raw.都道府県 ? `${raw.都道府県} ${raw.エリア || ''}` : store.area} icon={<MapPin className="h-4 w-4" />} />
-              <InfoRow label="住所" value={raw.住所} icon={<Building2 className="h-4 w-4" />} />
-              <InfoRow label="営業時間" value={raw.営業時間} icon={<Clock className="h-4 w-4" />} />
-              <InfoRow label="卓数" value={raw.卓数} icon={<LayoutGrid className="h-4 w-4" />} />
-              <InfoRow label="客層" value={raw.客層} icon={<Users className="h-4 w-4" />} />
-              <InfoRow label="系列店" value={raw.系列店} icon={<Building2 className="h-4 w-4" />} />
-            </div>
-          </Card>
+        {/* キャスト登録ボタン */}
+        <Link href="/casts/new">
+          <Button className="w-full h-12 bg-white text-zinc-950 hover:bg-zinc-200 rounded-xl">
+            <UserPlus className="mr-2 h-5 w-5" />
+            この店舗にキャスト登録
+          </Button>
+        </Link>
 
-          {/* 入店条件カード */}
-          <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">入店条件</h3>
-            <div className="space-y-0">
-              <InfoRow label="身分証" value={raw.身分証} icon={<Shield className="h-4 w-4" />} />
-              <InfoRow label="衣装" value={raw.衣装} icon={<Shirt className="h-4 w-4" />} />
-              <InfoRow label="寮" value={raw.寮} icon={<Home className="h-4 w-4" />} />
-            </div>
-          </Card>
-
-          {/* 詳細条件バッジ */}
-          {Object.keys(conditions).length > 0 && (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">詳細条件</h3>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(conditions).map(([key, val]) => (
-                  <ConditionBadge key={key} label={key} value={val as boolean} />
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* クイックアクション */}
-          <Link href="/casts/new">
-            <Button className="w-full h-12 bg-white text-zinc-950 hover:bg-zinc-200 rounded-xl">
-              <UserPlus className="mr-2 h-5 w-5" />
-              この店舗にキャスト登録
+        {/* sn-offer.com リンク */}
+        {raw.source_url && (
+          <a href={raw.source_url} target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="w-full h-10 border-zinc-700 text-zinc-400 hover:text-white text-xs">
+              <ExternalLink className="mr-2 h-3.5 w-3.5" />
+              sn-offer.com で詳細を確認
             </Button>
-          </Link>
+          </a>
+        )}
 
-          {/* 情報元リンク */}
-          {raw.source_url && (
-            <a href={raw.source_url} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="w-full h-10 border-zinc-700 text-zinc-400 hover:text-white text-xs">
-                <ExternalLink className="mr-2 h-3.5 w-3.5" />
-                sn-offer.com で詳細を確認
-              </Button>
-            </a>
-          )}
-        </TabsContent>
-
-        {/* ─── 給与・バックタブ ─── */}
-        <TabsContent value="pay" className="flex-1 space-y-4 p-4 m-0">
-          {raw.バック類 ? (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">バック類</h3>
-              <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.バック類}</p>
-            </Card>
-          ) : (
-            <Card className="bg-zinc-900 p-8 text-center rounded-xl">
-              <DollarSign className="h-10 w-10 mx-auto mb-3 text-zinc-700" />
-              <p className="text-zinc-500 text-sm">バック情報は非公開です</p>
-            </Card>
-          )}
-
-          {raw.引かれもの && (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">引かれもの</h3>
-              <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.引かれもの}</p>
-            </Card>
-          )}
-
-          <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">給与まとめ</h3>
-            <div className="space-y-0">
-              <InfoRow label="採用時給" value={raw.採用時給} icon={<DollarSign className="h-4 w-4" />} />
-              <InfoRow label="給与方式" value={raw.給与システム} icon={<TrendingUp className="h-4 w-4" />} />
-              <InfoRow label="給料日" value={raw.給料日} icon={<Calendar className="h-4 w-4" />} />
-            </div>
-          </Card>
-        </TabsContent>
-
-        {/* ─── ルール・条件タブ ─── */}
-        <TabsContent value="rules" className="flex-1 space-y-4 p-4 m-0">
-          {raw.ノルマペナルティ && (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <AlertTriangle className="h-3.5 w-3.5" />
-                ノルマ・ペナルティ
-              </h3>
-              <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.ノルマペナルティ}</p>
-            </Card>
-          )}
-
-          {raw.送り && (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Car className="h-3.5 w-3.5" />
-                送りについて
-              </h3>
-              <p className="text-sm text-zinc-300 whitespace-pre-line leading-relaxed">{raw.送り}</p>
-            </Card>
-          )}
-
-          <Card className="bg-zinc-900 p-5 rounded-xl">
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">入店条件</h3>
-            <div className="space-y-0">
-              <InfoRow label="身分証" value={raw.身分証} icon={<Shield className="h-4 w-4" />} />
-              <InfoRow label="衣装" value={raw.衣装} icon={<Shirt className="h-4 w-4" />} />
-              <InfoRow label="寮" value={raw.寮} icon={<Home className="h-4 w-4" />} />
-            </div>
-          </Card>
-
-          {Object.keys(conditions).length > 0 && (
-            <Card className="bg-zinc-900 p-5 rounded-xl">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">詳細条件</h3>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(conditions).map(([key, val]) => (
-                  <ConditionBadge key={key} label={key} value={val as boolean} />
-                ))}
-              </div>
-            </Card>
-          )}
-        </TabsContent>
-      </Tabs>
+      </div>
     </div>
   );
 }
